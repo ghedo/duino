@@ -1,0 +1,55 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use App::duino;
+
+=head1 NAME
+
+duino - Command-line tool for working with Arduino
+
+=cut
+
+=head1 SYNOPSIS
+
+ duino COMMAND [OPTIONS]
+
+ Options:
+   --board  BOARD_NAME
+   --port   SERIAL_PORT
+   --path   ARDUINO_PATH
+
+ Examples:
+   $ duino build --board uno
+   $ duino upload --board uno --port /dev/ttyACM0
+
+=cut
+
+App::duino -> run;
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--help>, B<-h>
+
+Help text.
+
+=back
+
+=head1 AUTHOR
+
+Alessandro Ghedini <alexbio@cpan.org>
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2013 Alessandro Ghedini.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
+
+=cut
