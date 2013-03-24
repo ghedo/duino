@@ -15,10 +15,21 @@ duino - Command-line tool for working with Arduino
 
  duino COMMAND [OPTIONS]
 
- Examples:
+=over
+
+=item Build a sketch:
+
    $ duino build --board uno
+
+=item Upload the sketch to the Arduino:
+
    $ duino upload --board uno --port /dev/ttyACM0
+
+=item Clean the build directory:
+
    $ duino clean --board uno
+
+=back
 
 =cut
 
