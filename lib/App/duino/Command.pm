@@ -13,9 +13,9 @@ App::duino::Command - Base class for App::duino commands
 
 sub opt_spec {
 	return (
-		[ 'board=s', 'set the board model', { default => 'uno' } ],
-		[ 'port=s', 'set the serial port to use', { default => undef } ],
-		[ 'path=s', 'set Arduino base directory', { default => '/usr/share/arduino' } ]
+		[ 'board|b=s', 'set the board model', { default => 'uno' } ],
+		[ 'port|p=s', 'set the serial port to use', { default => undef } ],
+		[ 'path|P=s', 'set Arduino base directory', { default => '/usr/share/arduino' } ]
 	);
 }
 

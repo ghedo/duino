@@ -32,9 +32,17 @@ App::duino -> run;
 
 =over 4
 
-=item B<--help>, B<-h>
+=item B<--board>, B<-b>
 
-Help text.
+The Arduino board used (default C<'uno'>).
+
+=item B<--port>, B<-p>
+
+The serial port to use to upload to the Arduino (es C</dev/ttyACM0>).
+
+=item B<--path>, B<-P>
+
+The path to the Arduino files.
 
 =back
 
