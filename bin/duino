@@ -30,7 +30,7 @@ App::duino -> run;
 
 =item B<--board>, B<-b>
 
-The Arduino board type. The environment variable C<ARDUINO_BOARD> will be used
+The Arduino board model. The environment variable C<ARDUINO_BOARD> will be used
 if present and if the command-line option is not set. If neither of them is set
 the default value (C<uno>) will be used.
 
@@ -53,6 +53,16 @@ The path to the Arduino installation directory. The environment variable
 C<ARDUINO_DIR> will be used if present and if the command-line option is not
 set. If neither of them is set the default value (C</usr/share/arduino>) will
 be used.
+
+=item B<--libs>, B<-l>
+
+List of space-separated, non-core Arduino libraries to build. The environment
+variable C<ARDUINO_LIBS> will be used if present and if the command-line option
+is not set. If neither of them is set no libraries are built.
+
+Example:
+
+    $ duino build --libs "Wire Wire/utility SPI"
 
 =back
 

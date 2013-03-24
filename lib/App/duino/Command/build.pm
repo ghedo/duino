@@ -46,6 +46,7 @@ sub execute {
 			f_cpu   => $self -> config($opt, 'build.f_cpu'),
 			vid     => $self -> config($opt, 'build.vid'),
 			pid     => $self -> config($opt, 'build.pid'),
+			arduino_libs => $opt -> libs,
 			arduino_dir => $opt -> dir,
 			arduino_sketchbook => $opt -> sketchbook,
 		};
@@ -100,6 +101,7 @@ USB_VID   = {$vid}
 USB_PID   = {$pid}
 
 ARDUINO_DIR        = {$arduino_dir}
+ARDUINO_LIBS       = {$arduino_libs}
 ARDUINO_VERSION    = 100
 ARDUINO_SKETCHBOOK = {$arduino_sketchbook}
 
