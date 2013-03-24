@@ -2,6 +2,9 @@ Revision history for App-duino
 
 {{$NEXT}}
 
+ - Make the duino.ini file optional (as it should have been from the start)
+ - Various documentation improvements (no functional changes)
+
 0.01      2013-03-24 23:20:24 Europe/Rome
 
  - Initial version
