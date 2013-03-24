@@ -26,7 +26,9 @@ sub usage_desc { '%c upload %o' }
 sub execute {
 	my ($self, $opt, $args) = @_;
 
-	open my $fh, '<', $opt -> port or die "open()";
+	open my $fh, '<', $opt -> port
+		or die "Can't open serial port.\n";
+
 	my $fd = fileno $fh;
 
 	my $term = POSIX::Termios -> new;
@@ -41,7 +43,7 @@ sub execute {
 		require Device::SerialPort;
 
 		my $serial = Device::SerialPort -> new($opt -> port)
-			or die "serial";
+			or die "Can't open serial port.\n";
 
 		$serial -> pulse_dtr_on(0.1 * 1000.0);
 	}
@@ -50,7 +52,6 @@ sub execute {
 
 	sleep 1;
 
-	my $base = $opt -> path;
 	my $board= $opt -> board;
 	my $port = $opt -> port;
 	my $name = basename getcwd;
@@ -59,8 +60,9 @@ sub execute {
 	my $prog = $self -> config($opt, 'upload.protocol');
 	my $baud = $self -> config($opt, 'upload.speed');
 
-	my $avrdude      = "$base/hardware/tools/avrdude";
-	my $avrdude_conf = "$base/hardware/tools/avrdude.conf";
+	my $avrdude      = $self -> file($opt, 'hardware/tools/avrdude');
+	my $avrdude_conf = $self -> file($opt, 'hardware/tools/avrdude.conf');
+
 	my @avrdude_opts = (
 		'-p', $mcu,
 		'-C', $avrdude_conf,

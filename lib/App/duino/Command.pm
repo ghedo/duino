@@ -5,6 +5,8 @@ use warnings;
 
 use App::Cmd::Setup -command;
 
+use File::Basename;
+
 =head1 NAME
 
 App::duino::Command - Base class for App::duino commands
@@ -12,10 +14,17 @@ App::duino::Command - Base class for App::duino commands
 =cut
 
 sub opt_spec {
+	my $arduino_dir   = $ENV{'ARDUINO_DIR'}   || '/usr/share/arduino';
+	my $arduino_board = $ENV{'ARDUINO_BOARD'} || 'uno';
+	my $arduino_port  = $ENV{'ARDUINO_PORT'}  || '/dev/ttyACM0';
+
 	return (
-		[ 'board|b=s', 'set the board model', { default => 'uno' } ],
-		[ 'port|p=s', 'set the serial port to use', { default => undef } ],
-		[ 'path|P=s', 'set Arduino base directory', { default => '/usr/share/arduino' } ]
+		[ 'board|b=s', 'set the board model',
+			{ default => $arduino_board } ],
+		[ 'port|p=s', 'set the serial port to use',
+			{ default => $arduino_port } ],
+		[ 'dir|d=s', 'set the Arduino installation directory',
+			{ default => $arduino_dir } ]
 	);
 }
 
@@ -24,10 +33,10 @@ sub config {
 
 	my $board = $opt -> board;
 
-	my $base   = $opt -> path;
-	my $boards = "$base/hardware/arduino/boards.txt";
+	my $boards = $self -> file($opt, 'hardware/arduino/boards.txt');
 
-	open my $fh, '<', $boards or die "open()";
+	open my $fh, '<', $boards
+		or die "Can't open 'boards.txt' file.\n";
 
 	my $value = undef;
 
@@ -45,6 +54,16 @@ sub config {
 	close $fh;
 
 	return $value;
+}
+
+sub file {
+	my ($self, $opt, $file) = @_;
+
+	my $path = $opt -> dir . '/' . $file;
+
+	return $path if -e $path;
+
+	die "Can't find '" . basename($file) . "' file.\n";
 }
 
 =head1 AUTHOR

@@ -15,11 +15,6 @@ duino - Command-line tool for working with Arduino
 
  duino COMMAND [OPTIONS]
 
- Options:
-   --board  BOARD_NAME
-   --port   SERIAL_PORT
-   --path   ARDUINO_PATH
-
  Examples:
    $ duino build --board uno
    $ duino upload --board uno --port /dev/ttyACM0
@@ -34,15 +29,22 @@ App::duino -> run;
 
 =item B<--board>, B<-b>
 
-The Arduino board used (default C<'uno'>).
+The Arduino board type. The environment variable C<ARDUINO_BOARD> will be used
+if present and if the command-line option is not set. If neither of them is set
+the default value (C<uno>) will be used.
 
 =item B<--port>, B<-p>
 
-The serial port to use to upload to the Arduino (es C</dev/ttyACM0>).
+The path to the Arduino serial port. The environment variable C<ARDUINO_PORT>
+will be used if present and if the command-line option is not set. If neither
+of them is set the default value (C</dev/ttyACM0>) will be used.
 
-=item B<--path>, B<-P>
+=item B<--dir>, B<-d>
 
-The path to the Arduino files.
+The path to the Arduino installation directory. The environment variable
+C<ARDUINO_DIR> will be used if present and if the command-line option is not
+set. If neither of them is set the default value (C</usr/share/arduino>) will
+be used.
 
 =back
 

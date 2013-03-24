@@ -32,7 +32,8 @@ sub execute {
 	unless (-e $makefile_name) {
 		make_path(dirname $makefile_name);
 
-		open my $makefile, '>', $makefile_name or die "open()";
+		open my $makefile, '>', $makefile_name
+			or die "Can't create Makefile.\n";
 
 		my $template = Text::Template -> new(
 			TYPE => 'FILEHANDLE', SOURCE => \*DATA
