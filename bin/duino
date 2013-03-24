@@ -18,6 +18,7 @@ duino - Command-line tool for working with Arduino
  Examples:
    $ duino build --board uno
    $ duino upload --board uno --port /dev/ttyACM0
+   $ duino clean --board uno
 
 =cut
 
