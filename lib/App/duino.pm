@@ -11,12 +11,7 @@ App::duino - Command-line tool for working with Arduino
 
 =head1 SYNOPSIS
 
-    use App::duino;
-
-    use strict;
-    use warnings;
-
-    App::duino -> run;
+   $ duino build
 
 =head1 AUTHOR
 
