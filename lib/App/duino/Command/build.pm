@@ -126,9 +126,6 @@ LOCAL_OBJ_FILES = $(LOCAL_C_SRCS:.c=.o)   $(LOCAL_CPP_SRCS:.cpp=.o) \
 		$(LOCAL_INO_SRCS:.ino=.o) $(LOCAL_AS_SRCS:.S=.o)
 LOCAL_OBJS      = $(patsubst %,$(OBJDIR)/%,$(LOCAL_OBJ_FILES))
 
-# Dependency files
-DEPS            = $(LOCAL_OBJS:.o=.d)
-
 # core sources
 CORE_C_SRCS     = $(wildcard $(ARDUINO_CORE_PATH)/*.c)
 CORE_CPP_SRCS   = $(wildcard $(ARDUINO_CORE_PATH)/*.cpp)
@@ -161,7 +158,6 @@ OBJDUMP = $(AVR_TOOLS_PATH)/avr-objdump
 AR      = $(AVR_TOOLS_PATH)/avr-ar
 SIZE    = $(AVR_TOOLS_PATH)/avr-size
 NM      = $(AVR_TOOLS_PATH)/avr-nm
-REMOVE  = rm -f
 MV      = mv -f
 CAT     = cat
 ECHO    = echo
@@ -190,9 +186,6 @@ CFLAGS        = -std=gnu99
 CXXFLAGS      = -fno-exceptions
 ASFLAGS       = -mmcu=$(MCU) -I. -x assembler-with-cpp
 LDFLAGS       = -mmcu=$(MCU) -Wl,--gc-sections -Os
-
-# Expand and pick the first port
-ARD_PORT      = $(firstword $(wildcard $(ARDUINO_PORT)))
 
 # library sources
 $(OBJDIR)/%.o: $(ARDUINO_LIB_PATH)/%.c
@@ -270,4 +263,4 @@ $(TARGET_ELF): 	$(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS)
 $(CORE_LIB):	$(CORE_OBJS) $(LIB_OBJS) $(USER_LIB_OBJS)
 		$(AR) rcs $@ $(CORE_OBJS) $(LIB_OBJS) $(USER_LIB_OBJS)
 
-.PHONY: all clean
+.PHONY: all
