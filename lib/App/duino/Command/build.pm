@@ -45,7 +45,9 @@ sub execute {
 			mcu     => $self -> config($opt, 'build.mcu'),
 			f_cpu   => $self -> config($opt, 'build.f_cpu'),
 			vid     => $self -> config($opt, 'build.vid'),
-			pid     => $self -> config($opt, 'build.pid')
+			pid     => $self -> config($opt, 'build.pid'),
+			arduino_dir => $opt -> dir,
+			arduino_sketchbook => $opt -> sketchbook,
 		};
 
 		$template -> fill_in(
@@ -97,9 +99,9 @@ F_CPU     = {$f_cpu}
 USB_VID   = {$vid}
 USB_PID   = {$pid}
 
-ARDUINO_DIR        = /usr/share/arduino
+ARDUINO_DIR        = {$arduino_dir}
 ARDUINO_VERSION    = 100
-ARDUINO_SKETCHBOOK = $(HOME)/sketchbook
+ARDUINO_SKETCHBOOK = {$arduino_sketchbook}
 
 ARDUINO_LIB_PATH  = $(ARDUINO_DIR)/libraries
 ARDUINO_CORE_PATH = $(ARDUINO_DIR)/hardware/arduino/cores/arduino

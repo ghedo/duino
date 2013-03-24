@@ -14,15 +14,19 @@ App::duino::Command - Base class for App::duino commands
 =cut
 
 sub opt_spec {
-	my $arduino_dir   = $ENV{'ARDUINO_DIR'}   || '/usr/share/arduino';
-	my $arduino_board = $ENV{'ARDUINO_BOARD'} || 'uno';
-	my $arduino_port  = $ENV{'ARDUINO_PORT'}  || '/dev/ttyACM0';
+	my $arduino_dir         = $ENV{'ARDUINO_DIR'}   || '/usr/share/arduino';
+	my $arduino_board       = $ENV{'ARDUINO_BOARD'} || 'uno';
+	my $arduino_port        = $ENV{'ARDUINO_PORT'}  || '/dev/ttyACM0';
+	my $arduino_sketchbook  = $ENV{'ARDUINO_SKETCHBOOK'} ||
+						"$ENV{'HOME'}/sketchbook";
 
 	return (
 		[ 'board|b=s', 'set the board model',
 			{ default => $arduino_board } ],
 		[ 'port|p=s', 'set the serial port to use',
 			{ default => $arduino_port } ],
+		[ 'sketchbook|s=s', 'set the user sketchbook directory',
+			{ default => $arduino_sketchbook } ],
 		[ 'dir|d=s', 'set the Arduino installation directory',
 			{ default => $arduino_dir } ]
 	);

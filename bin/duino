@@ -39,6 +39,13 @@ The path to the Arduino serial port. The environment variable C<ARDUINO_PORT>
 will be used if present and if the command-line option is not set. If neither
 of them is set the default value (C</dev/ttyACM0>) will be used.
 
+=item B<--sketchbook>, B<-s>
+
+The path to the user's sketchbook directory. The environment variable
+C<ARDUINO_SKETCHBOOK> will be used if present and if the command-line option is
+not set. If neither of them is set the default value (C<$HOME/sketchbook>) will
+be used.
+
 =item B<--dir>, B<-d>
 
 The path to the Arduino installation directory. The environment variable
