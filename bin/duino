@@ -66,6 +66,28 @@ Example:
 
 =back
 
+=head1 CONFIGURATION
+
+Per-project configurations can be specified in the C<duino.ini> file under the
+project directory. Valid configurations are:
+
+=over 4
+
+=item B<board>
+
+The Arduino board model.
+
+=item B<libs>
+
+A list of non-core libraries needed by the project.
+
+=back
+
+Example:
+
+    board = leonardo
+    libs  = Wire Wire/utility SPI SD SD/utility
+
 =head1 AUTHOR
 
 Alessandro Ghedini <alexbio@cpan.org>

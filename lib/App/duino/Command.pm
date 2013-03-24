@@ -6,6 +6,7 @@ use warnings;
 use App::Cmd::Setup -command;
 
 use File::Basename;
+use Config::INI::Reader;
 
 =head1 NAME
 
@@ -21,6 +22,14 @@ sub opt_spec {
 	my $arduino_sketchbook  = $ENV{'ARDUINO_SKETCHBOOK'} ||
 						"$ENV{'HOME'}/sketchbook";
 
+	my $config = Config::INI::Reader -> read_file('duino.ini');
+
+	$arduino_board = $config -> {'_'} -> {'board'}
+		if $config -> {'_'} -> {'board'};
+
+	$arduino_libs = $config -> {'_'} -> {'libs'}
+		if $config -> {'_'} -> {'libs'};
+
 	return (
 		[ 'board|b=s', 'specify the board model',
 			{ default => $arduino_board } ],
@@ -31,7 +40,7 @@ sub opt_spec {
 		[ 'dir|d=s', 'specify the Arduino installation directory',
 			{ default => $arduino_dir } ],
 		[ 'libs|l=s', 'specify the Arduino libraries to build',
-			{ default => '' } ],
+			{ default => $arduino_libs } ],
 	);
 }
 
