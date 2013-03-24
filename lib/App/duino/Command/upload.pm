@@ -62,8 +62,6 @@ sub execute {
 	my $avrdude      = "$base/hardware/tools/avrdude";
 	my $avrdude_conf = "$base/hardware/tools/avrdude.conf";
 	my @avrdude_opts = (
-		'-q',
-		'-V',
 		'-p', $mcu,
 		'-C', $avrdude_conf,
 		'-c', $prog,
