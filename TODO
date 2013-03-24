@@ -1,0 +1,6 @@
+* serial: simple terminal
+* implement "duino CMD sketch.ino" to build/upload a specific sketch
+* configuration file/env variables for default values
+* automatic dependency tracking
+* automatic ARDUINO_PATH discovery based on OS
+* better output (colors?)
