@@ -22,13 +22,15 @@ sub opt_spec {
 	my $arduino_sketchbook  = $ENV{'ARDUINO_SKETCHBOOK'} ||
 						"$ENV{'HOME'}/sketchbook";
 
-	my $config = Config::INI::Reader -> read_file('duino.ini');
+	if (-e 'duino.ini') {
+		my $config = Config::INI::Reader -> read_file('duino.ini');
 
-	$arduino_board = $config -> {'_'} -> {'board'}
-		if $config -> {'_'} -> {'board'};
+		$arduino_board = $config -> {'_'} -> {'board'}
+			if $config -> {'_'} -> {'board'};
 
-	$arduino_libs = $config -> {'_'} -> {'libs'}
-		if $config -> {'_'} -> {'libs'};
+		$arduino_libs = $config -> {'_'} -> {'libs'}
+			if $config -> {'_'} -> {'libs'};
+	}
 
 	return (
 		[ 'board|b=s', 'specify the board model',
