@@ -9,7 +9,7 @@ use File::Path qw(remove_tree);
 
 =head1 NAME
 
-App::duino::Command::clean - Clean the build directory for a specific board
+App::duino::Command::clean - Clean the build directory
 
 =head1 SYNOPSIS
 
@@ -17,7 +17,7 @@ App::duino::Command::clean - Clean the build directory for a specific board
 
 =cut
 
-sub abstract { 'clean the build directory for a specific board' }
+sub abstract { 'clean the build directory' }
 
 sub usage_desc { '%c clean %o' }
 
