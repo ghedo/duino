@@ -26,6 +26,33 @@ sub usage_desc { '%c upload %o [sketch.ino]' }
 sub execute {
 	my ($self, $opt, $args) = @_;
 
+	my $board= $opt -> board;
+	my $port = $opt -> port;
+	my $name = basename getcwd;
+
+	($name = basename($args -> [0])) =~ s/\.[^.]+$//
+		if $args -> [0] and -e $args -> [0];
+
+	my $hex  = ".build/$board/$name.hex";
+	my $mcu  = $self -> config($opt, 'build.mcu');
+	my $prog = $self -> config($opt, 'upload.protocol');
+	my $baud = $self -> config($opt, 'upload.speed');
+
+	my $avrdude      = $self -> file($opt, 'hardware/tools/avrdude');
+	my $avrdude_conf = $self -> file($opt, 'hardware/tools/avrdude.conf');
+
+	my @avrdude_opts = (
+		'-p', $mcu,
+		'-C', $avrdude_conf,
+		'-c', $prog,
+		'-b', $baud,
+		'-P', $port,
+		'-U', "flash:w:$hex:i"
+	);
+
+	die "Can't find '$hex' file, did you run 'duino build'?\n"
+		unless -e $hex;
+
 	open my $fh, '<', $opt -> port
 		or die "Can't open serial port.\n";
 
@@ -51,30 +78,6 @@ sub execute {
 	close $fh;
 
 	sleep 1;
-
-	my $board= $opt -> board;
-	my $port = $opt -> port;
-	my $name = basename getcwd;
-
-	($name = basename($args -> [0])) =~ s/\.[^.]+$//
-		if $args -> [0] and -e $args -> [0];
-
-	my $hex  = ".build/$board/$name.hex";
-	my $mcu  = $self -> config($opt, 'build.mcu');
-	my $prog = $self -> config($opt, 'upload.protocol');
-	my $baud = $self -> config($opt, 'upload.speed');
-
-	my $avrdude      = $self -> file($opt, 'hardware/tools/avrdude');
-	my $avrdude_conf = $self -> file($opt, 'hardware/tools/avrdude.conf');
-
-	my @avrdude_opts = (
-		'-p', $mcu,
-		'-C', $avrdude_conf,
-		'-c', $prog,
-		'-b', $baud,
-		'-P', $port,
-		'-U', "flash:w:$hex:i"
-	);
 
 	system $avrdude, @avrdude_opts;
 }
