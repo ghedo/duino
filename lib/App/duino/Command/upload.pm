@@ -21,7 +21,7 @@ App::duino::Command::upload - Upload a sketch to an Arduino
 
 sub abstract { 'upload a sketch to an Arduino' }
 
-sub usage_desc { '%c upload %o' }
+sub usage_desc { '%c upload %o [sketch.ino]' }
 
 sub execute {
 	my ($self, $opt, $args) = @_;
@@ -55,6 +55,10 @@ sub execute {
 	my $board= $opt -> board;
 	my $port = $opt -> port;
 	my $name = basename getcwd;
+
+	($name = basename($args -> [0])) =~ s/\.[^.]+$//
+		if $args -> [0] and -e $args -> [0];
+
 	my $hex  = ".build/$board/$name.hex";
 	my $mcu  = $self -> config($opt, 'build.mcu');
 	my $prog = $self -> config($opt, 'upload.protocol');
