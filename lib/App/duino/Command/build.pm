@@ -176,6 +176,7 @@ OBJCOPY = $(AVR_TOOLS_PATH)/avr-objcopy
 AR      = $(AVR_TOOLS_PATH)/avr-ar
 CAT     = cat
 ECHO    = echo
+MKDIR   = mkdir -p
 
 # General arguments
 SYS_LIBS      = $(patsubst %,$(ARDUINO_LIB_PATH)/%,$(ARDUINO_LIBS))
@@ -209,22 +210,22 @@ LDFLAGS       = -mmcu=$(MCU) -Wl,--gc-sections -Os
 # library sources
 $(OBJDIR)/%.o: $(ARDUINO_LIB_PATH)/%.c
 	$(ECHO) 'Building $(shell basename $<)'
-	mkdir -p $(dir $@)
+	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/%.o: $(ARDUINO_LIB_PATH)/%.cpp
 	$(ECHO) 'Building $(shell basename $<)'
-	mkdir -p $(dir $@)
+	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 $(OBJDIR)/%.o: $(USER_LIB_PATH)/%.cpp
 	$(ECHO) 'Building $(shell basename $<)'
-	mkdir -p $(dir $@)
+	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/%.o: $(USER_LIB_PATH)/%.c
 	$(ECHO) 'Building $(shell basename $<)'
-	mkdir -p $(dir $@)
+	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 # normal local sources
@@ -241,6 +242,7 @@ $(OBJDIR)/%.o: %.cpp
 # the ino -> cpp -> o file
 $(OBJDIR)/%.cpp: %.ino
 	$(ECHO) 'Building $(shell basename $<)'
+	$(MKDIR) $(dir $@)
 	$(ECHO) '#include <Arduino.h>' > $@
 	$(CAT)  $< >> $@
 
@@ -264,7 +266,7 @@ $(OBJDIR)/%.hex: $(OBJDIR)/%.elf
 all: 		$(OBJDIR) $(TARGET_HEX)
 
 $(OBJDIR):
-		mkdir $(OBJDIR)
+		$(MKDIR) $(OBJDIR)
 
 $(TARGET_ELF): 	$(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS)
 		$(CC) $(LDFLAGS) -o $@ $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) -lc -lm
