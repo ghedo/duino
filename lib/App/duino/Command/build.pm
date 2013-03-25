@@ -30,51 +30,52 @@ sub execute {
 	my $board_name    = $opt -> board;
 	my $makefile_name = ".build/$board_name/Makefile";
 
-	unless (-e $makefile_name) {
-		make_path(dirname $makefile_name);
+	make_path(dirname $makefile_name);
 
-		open my $makefile, '>', $makefile_name
-			or die "Can't create Makefile.\n";
+	open my $makefile, '>', $makefile_name
+		or die "Can't create Makefile.\n";
 
-		my $template = Text::Template -> new(
-			TYPE => 'FILEHANDLE', SOURCE => \*DATA
-		);
+	my $template = Text::Template -> new(
+		TYPE => 'FILEHANDLE', SOURCE => \*DATA
+	);
 
-		my (@c_srcs, @cpp_srcs, @ino_srcs);
+	my ($target, @c_srcs, @cpp_srcs, @ino_srcs);
 
-		@c_srcs   = File::Find::Rule -> file -> name('*.c') -> in('./');
-		@cpp_srcs = File::Find::Rule -> file -> name('*.cpp') -> in('./');
+	@c_srcs   = File::Find::Rule -> file -> name('*.c') -> in('./');
+	@cpp_srcs = File::Find::Rule -> file -> name('*.cpp') -> in('./');
 
-		if ($args -> [0] and -e $args -> [0]) {
-			push @ino_srcs, $args -> [0];
-		} elsif ($args -> [0]) {
-			die "Can't find '" . $args -> [0] . "' file.\n";
-		} else {
-			@ino_srcs = File::Find::Rule -> file
-					-> name('*.ino') -> in('./');
-		}
-
-		my $makefile_opts = {
-			board   => $board_name,
-			variant => $self -> config($opt, 'build.variant'),
-			mcu     => $self -> config($opt, 'build.mcu'),
-			f_cpu   => $self -> config($opt, 'build.f_cpu'),
-			vid     => $self -> config($opt, 'build.vid'),
-			pid     => $self -> config($opt, 'build.pid'),
-
-			local_c_srcs   => join(' ', @c_srcs),
-			local_cpp_srcs => join(' ', @cpp_srcs),
-			local_ino_srcs => join(' ', @ino_srcs),
-
-			arduino_libs       => $opt -> libs,
-			arduino_dir        => $opt -> dir,
-			arduino_sketchbook => $opt -> sketchbook,
-		};
-
-		$template -> fill_in(
-			OUTPUT => $makefile, HASH => $makefile_opts
-		);
+	if ($args -> [0] and -e $args -> [0]) {
+		$target = '$(notdir $(basename $(LOCAL_INO_SRCS)))';
+		push @ino_srcs, $args -> [0];
+	} elsif ($args -> [0]) {
+		die "Can't find '" . $args -> [0] . "' file.\n";
+	} else {
+		$target = '$(notdir $(CURDIR))';
+		@ino_srcs = File::Find::Rule -> file
+				-> name('*.ino') -> in('./');
 	}
+
+	my $makefile_opts = {
+		board   => $board_name,
+		variant => $self -> config($opt, 'build.variant'),
+		mcu     => $self -> config($opt, 'build.mcu'),
+		f_cpu   => $self -> config($opt, 'build.f_cpu'),
+		vid     => $self -> config($opt, 'build.vid'),
+		pid     => $self -> config($opt, 'build.pid'),
+
+		target         => $target,
+		local_c_srcs   => join(' ', @c_srcs),
+		local_cpp_srcs => join(' ', @cpp_srcs),
+		local_ino_srcs => join(' ', @ino_srcs),
+
+		arduino_libs       => $opt -> libs,
+		arduino_dir        => $opt -> dir,
+		arduino_sketchbook => $opt -> sketchbook,
+	};
+
+	$template -> fill_in(
+		OUTPUT => $makefile, HASH => $makefile_opts
+	);
 
 	system 'make', '--silent', '-f', $makefile_name;
 }
@@ -161,7 +162,7 @@ CORE_OBJS       = $(patsubst $(ARDUINO_CORE_PATH)/%,  \
 # Rules for making stuff
 #
 
-TARGET     = $(notdir $(CURDIR))
+TARGET     = {$target}
 
 # The name of the main targets
 TARGET_HEX = $(OBJDIR)/$(TARGET).hex
