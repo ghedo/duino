@@ -71,6 +71,9 @@ sub config {
 
 	close $fh;
 
+	die "Can't find '$board.$config' config value.\n"
+		if not $value;
+
 	return $value;
 }
 
