@@ -21,6 +21,10 @@ duino - Command-line tool for working with Arduino
 
    $ duino build --board uno
 
+=item Build a single sketch file:
+
+   $ duino build --board uno some_sketch.ino
+
 =item Upload the sketch to the Arduino:
 
    $ duino upload --board uno --port /dev/ttyACM0

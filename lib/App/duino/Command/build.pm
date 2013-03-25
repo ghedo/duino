@@ -7,6 +7,7 @@ use App::duino -command;
 
 use Text::Template;
 use File::Basename;
+use File::Find::Rule;
 use File::Path qw(make_path);
 
 =head1 NAME
@@ -21,7 +22,7 @@ App::duino::Command::build - Build an Arduino sketch
 
 sub abstract { 'build an Arduino sketch' }
 
-sub usage_desc { '%c build %o' }
+sub usage_desc { '%c build %o [sketch.ino]' }
 
 sub execute {
 	my ($self, $opt, $args) = @_;
@@ -39,6 +40,20 @@ sub execute {
 			TYPE => 'FILEHANDLE', SOURCE => \*DATA
 		);
 
+		my (@c_srcs, @cpp_srcs, @ino_srcs);
+
+		@c_srcs   = File::Find::Rule -> file -> name('*.c') -> in('./');
+		@cpp_srcs = File::Find::Rule -> file -> name('*.cpp') -> in('./');
+
+		if ($args -> [0] and -e $args -> [0]) {
+			push @ino_srcs, $args -> [0];
+		} elsif ($args -> [0]) {
+			die "Can't find '" . $args -> [0] . "' file.\n";
+		} else {
+			@ino_srcs = File::Find::Rule -> file
+					-> name('*.ino') -> in('./');
+		}
+
 		my $makefile_opts = {
 			board   => $board_name,
 			variant => $self -> config($opt, 'build.variant'),
@@ -46,8 +61,13 @@ sub execute {
 			f_cpu   => $self -> config($opt, 'build.f_cpu'),
 			vid     => $self -> config($opt, 'build.vid'),
 			pid     => $self -> config($opt, 'build.pid'),
-			arduino_libs => $opt -> libs,
-			arduino_dir => $opt -> dir,
+
+			local_c_srcs   => join(' ', @c_srcs),
+			local_cpp_srcs => join(' ', @cpp_srcs),
+			local_ino_srcs => join(' ', @ino_srcs),
+
+			arduino_libs       => $opt -> libs,
+			arduino_dir        => $opt -> dir,
 			arduino_sketchbook => $opt -> sketchbook,
 		};
 
@@ -117,16 +137,13 @@ AVR_TOOLS_PATH    = $(AVR_TOOLS_DIR)/bin
 
 OBJDIR  = .build/$(BOARD_TAG)
 
-LOCAL_C_SRCS    = $(wildcard *.c)
-LOCAL_CPP_SRCS  = $(wildcard *.cpp)
-LOCAL_CC_SRCS   = $(wildcard *.cc)
-LOCAL_PDE_SRCS  = $(wildcard *.pde)
-LOCAL_INO_SRCS  = $(wildcard *.ino)
-LOCAL_AS_SRCS   = $(wildcard *.S)
-LOCAL_OBJ_FILES = $(LOCAL_C_SRCS:.c=.o)   $(LOCAL_CPP_SRCS:.cpp=.o) \
-		$(LOCAL_CC_SRCS:.cc=.o)   $(LOCAL_PDE_SRCS:.pde=.o) \
-		$(LOCAL_INO_SRCS:.ino=.o) $(LOCAL_AS_SRCS:.S=.o)
-LOCAL_OBJS      = $(patsubst %,$(OBJDIR)/%,$(LOCAL_OBJ_FILES))
+LOCAL_C_SRCS    = {$local_c_srcs}
+LOCAL_CPP_SRCS  = {$local_cpp_srcs}
+LOCAL_INO_SRCS  = {$local_ino_srcs}
+
+LOCAL_OBJ_FILES = $(LOCAL_C_SRCS:.c=.o) $(LOCAL_CPP_SRCS:.cpp=.o) \
+		  $(LOCAL_INO_SRCS:.ino=.o)
+LOCAL_OBJS      = $(addprefix $(OBJDIR)/, $(LOCAL_OBJ_FILES))
 
 # core sources
 CORE_C_SRCS     = $(wildcard $(ARDUINO_CORE_PATH)/*.c)
@@ -156,24 +173,24 @@ CORE_LIB   = $(OBJDIR)/libcore.a
 CC      = $(AVR_TOOLS_PATH)/avr-gcc
 CXX     = $(AVR_TOOLS_PATH)/avr-g++
 OBJCOPY = $(AVR_TOOLS_PATH)/avr-objcopy
-OBJDUMP = $(AVR_TOOLS_PATH)/avr-objdump
 AR      = $(AVR_TOOLS_PATH)/avr-ar
-SIZE    = $(AVR_TOOLS_PATH)/avr-size
-NM      = $(AVR_TOOLS_PATH)/avr-nm
-MV      = mv -f
 CAT     = cat
 ECHO    = echo
 
 # General arguments
 SYS_LIBS      = $(patsubst %,$(ARDUINO_LIB_PATH)/%,$(ARDUINO_LIBS))
 USER_LIBS     = $(patsubst %,$(USER_LIB_PATH)/%,$(ARDUINO_LIBS))
+
 SYS_INCLUDES  = $(patsubst %,-I%,$(SYS_LIBS))
 USER_INCLUDES = $(patsubst %,-I%,$(USER_LIBS))
+
 LIB_C_SRCS    = $(wildcard $(patsubst %,%/*.c,$(SYS_LIBS)))
 LIB_CPP_SRCS  = $(wildcard $(patsubst %,%/*.cpp,$(SYS_LIBS)))
-USER_LIB_CPP_SRCS   = $(wildcard $(patsubst %,%/*.cpp,$(USER_LIBS)))
-USER_LIB_C_SRCS     = $(wildcard $(patsubst %,%/*.c,$(USER_LIBS)))
-LIB_OBJS      = $(patsubst $(ARDUINO_LIB_PATH)/%.c,$(OBJDIR)/%.o,$(LIB_C_SRCS)) \
+
+USER_LIB_CPP_SRCS = $(wildcard $(patsubst %,%/*.cpp,$(USER_LIBS)))
+USER_LIB_C_SRCS   = $(wildcard $(patsubst %,%/*.c,$(USER_LIBS)))
+
+LIB_OBJS      = $(patsubst $(ARDUINO_LIB_PATH)/%.c,$(OBJDIR)/%.o,$(LIB_C_SRCS))\
 		$(patsubst $(ARDUINO_LIB_PATH)/%.cpp,$(OBJDIR)/%.o,$(LIB_CPP_SRCS))
 USER_LIB_OBJS = $(patsubst $(USER_LIB_PATH)/%.cpp,$(OBJDIR)/%.o,$(USER_LIB_CPP_SRCS)) \
 		$(patsubst $(USER_LIB_PATH)/%.c,$(OBJDIR)/%.o,$(USER_LIB_C_SRCS))
@@ -217,19 +234,9 @@ $(OBJDIR)/%.o: %.c
 	$(ECHO) 'Building $(shell basename $<)'
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
-$(OBJDIR)/%.o: %.cc
-	$(ECHO) 'Building $(shell basename $<)'
-	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
-
 $(OBJDIR)/%.o: %.cpp
 	$(ECHO) 'Building $(shell basename $<)'
 	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
-
-# the pde -> cpp -> o file
-$(OBJDIR)/%.cpp: %.pde
-	$(ECHO) 'Building $(shell basename $<)'
-	$(ECHO) '#include "WProgram.h"' > $@
-	$(CAT)  $< >> $@
 
 # the ino -> cpp -> o file
 $(OBJDIR)/%.cpp: %.ino

@@ -1,5 +1,4 @@
 * simple serial terminal
-* "duino CMD sketch.ino" to build/upload a specific sketch
 * automatic dependency tracking
 * automatic ARDUINO_PATH discovery based on OS
 * roll own DTR pulse implementation and drop Device::SerialPort
