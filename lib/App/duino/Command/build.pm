@@ -239,22 +239,22 @@ LDFLAGS       = -mmcu=$(MCU) -Wl,--gc-sections -Os
 
 # library sources
 $(OBJDIR)/%.o: $(ARDUINO_LIB_PATH)/%.c
-	$(ECHO) 'Building $(shell basename $<)'
+	$(ECHO) 'Building $(notdir $<)'
 	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/%.o: $(ARDUINO_LIB_PATH)/%.cpp
-	$(ECHO) 'Building $(shell basename $<)'
+	$(ECHO) 'Building $(notdir $<)'
 	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 $(OBJDIR)/%.o: $(USER_LIB_PATH)/%.cpp
-	$(ECHO) 'Building $(shell basename $<)'
+	$(ECHO) 'Building $(notdir $<)'
 	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/%.o: $(USER_LIB_PATH)/%.c
-	$(ECHO) 'Building $(shell basename $<)'
+	$(ECHO) 'Building $(notdir $<)'
 	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
@@ -262,16 +262,16 @@ $(OBJDIR)/%.o: $(USER_LIB_PATH)/%.c
 # .o rules are for objects, .d for dependency tracking
 # there seems to be an awful lot of duplication here!!!
 $(OBJDIR)/%.o: %.c
-	$(ECHO) 'Building $(shell basename $<)'
+	$(ECHO) 'Building $(notdir $<)'
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/%.o: %.cpp
-	$(ECHO) 'Building $(shell basename $<)'
+	$(ECHO) 'Building $(notdir $<)'
 	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 # the ino -> cpp -> o file
 $(OBJDIR)/%.cpp: %.ino
-	$(ECHO) 'Building $(shell basename $<)'
+	$(ECHO) 'Building $(notdir $<)'
 	$(MKDIR) $(dir $@)
 	$(ECHO) '#include <Arduino.h>' > $@
 	$(CAT)  $< >> $@
@@ -281,19 +281,21 @@ $(OBJDIR)/%.o: $(OBJDIR)/%.cpp
 
 # core files
 $(OBJDIR)/%.o: $(ARDUINO_CORE_PATH)/%.c
-	$(ECHO) 'Building $(shell basename $<)'
+	$(ECHO) 'Building $(notdir $<)'
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/%.o: $(ARDUINO_CORE_PATH)/%.cpp
-	$(ECHO) 'Building $(shell basename $<)'
+	$(ECHO) 'Building $(notdir $<)'
 	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 # various object conversions
 $(OBJDIR)/%.hex: $(OBJDIR)/%.elf
-	$(ECHO) 'Building $(shell basename $<)'
+	$(ECHO) 'Generating $(notdir $@)'
 	$(OBJCOPY) -O ihex -R .eeprom $< $@
+	$(ECHO)
 
 all: 		$(OBJDIR) $(TARGET_HEX)
+	$(ECHO) 'Built! Now you can run "duino upload"'
 
 $(OBJDIR):
 		$(MKDIR) $(OBJDIR)
@@ -302,6 +304,7 @@ $(TARGET_ELF): 	$(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS)
 		$(CC) $(LDFLAGS) -o $@ $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) -lc -lm
 
 $(CORE_LIB):	$(CORE_OBJS) $(LIB_OBJS) $(USER_LIB_OBJS)
+		$(ECHO) 'Linking $(notdir $(CORE_LIB))'
 		$(AR) rcs $@ $(CORE_OBJS) $(LIB_OBJS) $(USER_LIB_OBJS)
 
 .PHONY: all
