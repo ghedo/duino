@@ -23,6 +23,26 @@ sub abstract { 'upload a sketch to an Arduino' }
 
 sub usage_desc { '%c upload %o [sketch.ino]' }
 
+sub opt_spec {
+	my $arduino_dir         = $ENV{'ARDUINO_DIR'}   || '/usr/share/arduino';
+	my $arduino_board       = $ENV{'ARDUINO_BOARD'} || 'uno';
+	my $arduino_port        = $ENV{'ARDUINO_PORT'}  || '/dev/ttyACM0';
+
+	if (-e 'duino.ini') {
+		my $config = Config::INI::Reader -> read_file('duino.ini');
+
+		$arduino_board = $config -> {'_'} -> {'board'}
+			if $config -> {'_'} -> {'board'};
+	}
+
+	return (
+		[ 'board|b=s', 'specify the board model',
+			{ default => $arduino_board } ],
+		[ 'port|p=s', 'specify the serial port to use',
+			{ default => $arduino_port } ],
+	);
+}
+
 sub execute {
 	my ($self, $opt, $args) = @_;
 

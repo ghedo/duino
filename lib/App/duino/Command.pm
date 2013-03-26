@@ -14,38 +14,6 @@ App::duino::Command - Base class for App::duino commands
 
 =cut
 
-sub opt_spec {
-	my $arduino_dir         = $ENV{'ARDUINO_DIR'}   || '/usr/share/arduino';
-	my $arduino_board       = $ENV{'ARDUINO_BOARD'} || 'uno';
-	my $arduino_port        = $ENV{'ARDUINO_PORT'}  || '/dev/ttyACM0';
-	my $arduino_libs        = $ENV{'ARDUINO_LIBS'}  || '';
-	my $arduino_sketchbook  = $ENV{'ARDUINO_SKETCHBOOK'} ||
-						"$ENV{'HOME'}/sketchbook";
-
-	if (-e 'duino.ini') {
-		my $config = Config::INI::Reader -> read_file('duino.ini');
-
-		$arduino_board = $config -> {'_'} -> {'board'}
-			if $config -> {'_'} -> {'board'};
-
-		$arduino_libs = $config -> {'_'} -> {'libs'}
-			if $config -> {'_'} -> {'libs'};
-	}
-
-	return (
-		[ 'board|b=s', 'specify the board model',
-			{ default => $arduino_board } ],
-		[ 'port|p=s', 'specify the serial port to use',
-			{ default => $arduino_port } ],
-		[ 'sketchbook|s=s', 'specify the user sketchbook directory',
-			{ default => $arduino_sketchbook } ],
-		[ 'dir|d=s', 'specify the Arduino installation directory',
-			{ default => $arduino_dir } ],
-		[ 'libs|l=s', 'specify the Arduino libraries to build',
-			{ default => $arduino_libs } ],
-	);
-}
-
 sub config {
 	my ($self, $opt, $config) = @_;
 
