@@ -2,6 +2,12 @@ Revision history for App-duino
 
 {{$NEXT}}
 
+ - Improve documentation (no functional changes)
+ - Search files in sub-directories too on build
+ - Allow builds of different sketches in the same build directory
+ - Support build and upload of a single user-specified sketch
+ - Improve error messages
+
 0.02      2013-03-25 00:07:03 Europe/Rome
 
  - Make the duino.ini file optional (as it should have been from the start)
