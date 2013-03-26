@@ -7,7 +7,7 @@ use App::Cmd::Setup -app;
 
 =head1 NAME
 
-App::duino - Command-line tool for working with Arduino
+App::duino - Command-line tool for working with Arduino boards
 
 =head1 SYNOPSIS
 
