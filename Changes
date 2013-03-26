@@ -2,6 +2,8 @@ Revision history for App-duino
 
 {{$NEXT}}
 
+0.05      2013-03-26 14:29:41 Europe/Rome
+
  - Improve documentation (no functional changes)
  - Fix 'models' and 'upload' commands
 
