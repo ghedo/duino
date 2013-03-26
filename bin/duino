@@ -44,6 +44,16 @@ duino - Command-line tool for working with Arduino
 
 =back
 
+=head1 DESCRIPTION
+
+B<duino> is a simple command-line tool that simplifies working with Arduino
+boards: it can build and upload sketches to a variety of models and has a
+built-in minimal serial teminal for communicating with the boards.
+
+To work it needs the Arduino software environment that can be found on the
+L<Arduino website|http://arduino.cc/en/Main/Software>, or in most package
+repositories (e.g. the C<arduino-core> package on Debian/Ubuntu).
+
 =cut
 
 App::duino -> run;
