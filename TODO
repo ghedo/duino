@@ -1,4 +1,3 @@
-* simple serial terminal
 * automatic dependency tracking
 * automatic ARDUINO_PATH discovery based on OS
 * roll own DTR pulse implementation and drop Device::SerialPort

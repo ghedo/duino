@@ -34,6 +34,10 @@ duino - Command-line tool for working with Arduino
    $ duino build --board uno some_sketch.ino
    $ duino upload --board uno --port /dev/ttyACM0 some_sketch.ino
 
+=item Communicate with the Arduino:
+
+   $ duino com --port /dev/ttyACM0
+
 =item Clean the build directory:
 
    $ duino clean --board uno

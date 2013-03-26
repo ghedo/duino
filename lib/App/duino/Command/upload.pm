@@ -24,7 +24,6 @@ sub abstract { 'upload a sketch to an Arduino' }
 sub usage_desc { '%c upload %o [sketch.ino]' }
 
 sub opt_spec {
-	my $arduino_dir         = $ENV{'ARDUINO_DIR'}   || '/usr/share/arduino';
 	my $arduino_board       = $ENV{'ARDUINO_BOARD'} || 'uno';
 	my $arduino_port        = $ENV{'ARDUINO_PORT'}  || '/dev/ttyACM0';
 
