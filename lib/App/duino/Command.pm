@@ -54,7 +54,7 @@ sub config {
 	my $boards = $self -> file($opt, 'hardware/arduino/boards.txt');
 
 	open my $fh, '<', $boards
-		or die "Can't open 'boards.txt' file.\n";
+		or die "Can't open file 'boards.txt'.\n";
 
 	my $value = undef;
 
@@ -84,7 +84,7 @@ sub file {
 
 	return $path if -e $path;
 
-	die "Can't find '" . basename($file) . "' file.\n";
+	die "Can't find file '" . basename($file) . "'.\n";
 }
 
 =head1 AUTHOR

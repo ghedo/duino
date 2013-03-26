@@ -50,11 +50,11 @@ sub execute {
 		'-U', "flash:w:$hex:i"
 	);
 
-	die "Can't find '$hex' file, did you run 'duino build'?\n"
+	die "Can't find file '$hex', did you run 'duino build'?\n"
 		unless -e $hex;
 
 	open my $fh, '<', $opt -> port
-		or die "Can't open serial port.\n";
+		or die "Can't open serial port '" . $opt -> port . "'.\n";
 
 	my $fd = fileno $fh;
 
@@ -70,7 +70,7 @@ sub execute {
 		require Device::SerialPort;
 
 		my $serial = Device::SerialPort -> new($opt -> port)
-			or die "Can't open serial port.\n";
+			or die "Can't open serial port '" . $opt -> port . "'.\n";
 
 		$serial -> pulse_dtr_on(0.1 * 1000.0);
 	}

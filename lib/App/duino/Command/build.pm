@@ -48,7 +48,7 @@ sub execute {
 		$target = '$(notdir $(basename $(LOCAL_INO_SRCS)))';
 		push @ino_srcs, $args -> [0];
 	} elsif ($args -> [0]) {
-		die "Can't find '" . $args -> [0] . "' file.\n";
+		die "Can't find file '" . $args -> [0] . "'.\n";
 	} else {
 		$target = '$(notdir $(CURDIR))';
 		@ino_srcs = File::Find::Rule -> file
