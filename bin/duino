@@ -17,6 +17,10 @@ duino - Command-line tool for working with Arduino
 
 =over
 
+=item List the supported Arduino models:
+
+   $ duino models
+
 =item Build a sketch:
 
    $ duino build --board uno
