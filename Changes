@@ -2,6 +2,8 @@ Revision history for App-duino
 
 {{$NEXT}}
 
+0.03      2013-03-26 11:34:53 Europe/Rome
+
  - Improve documentation (no functional changes)
  - Search files in sub-directories too on build
  - Allow builds of different sketches in the same build directory
