@@ -7,7 +7,7 @@ use App::duino;
 
 =head1 NAME
 
-duino - Command-line tool for working with Arduino boards
+duino - Command-line toolkit for working with Arduino boards
 
 =cut
 
@@ -48,7 +48,7 @@ duino - Command-line tool for working with Arduino boards
 
 B<duino> is a command-line toolkit for working with Arduino boards that can
 replace the Arduino IDE. It can be either used directly on the command-line or
-integrated into third-party IDES. With duino you can quickly build and upload
+integrated into third-party IDEs. With duino you can quickly build and upload
 sketches to a variety of Arduino boards, and communicate with them using the
 built-in serial monitor.
 
