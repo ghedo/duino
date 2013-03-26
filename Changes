@@ -2,6 +2,9 @@ Revision history for App-duino
 
 {{$NEXT}}
 
+ - Improve documentation (no functional changes)
+ - Fix 'models' and 'upload' commands
+
 0.04      2013-03-26 14:03:54 Europe/Rome
 
  - Add 'models' command to list supported Arduino models
