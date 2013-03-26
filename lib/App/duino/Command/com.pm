@@ -24,13 +24,6 @@ sub usage_desc { '%c upload %o [sketch.ino]' }
 sub opt_spec {
 	my $arduino_port        = $ENV{'ARDUINO_PORT'}  || '/dev/ttyACM0';
 
-	if (-e 'duino.ini') {
-		my $config = Config::INI::Reader -> read_file('duino.ini');
-
-		$arduino_board = $config -> {'_'} -> {'board'}
-			if $config -> {'_'} -> {'board'};
-	}
-
 	return (
 		[ 'port|p=s', 'specify the serial port to use',
 			{ default => $arduino_port } ],
