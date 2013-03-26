@@ -11,7 +11,7 @@ App::duino - Command-line tool for working with Arduino
 
 =head1 SYNOPSIS
 
-   $ duino build
+   $ duino help
 
 =head1 AUTHOR
 
