@@ -17,7 +17,16 @@ App::duino::Command::models - List all known Arduino models
 
 sub abstract { 'list all known Arduino models' }
 
-sub usage_desc { '%c models' }
+sub usage_desc { '%c models %o' }
+
+sub opt_spec {
+	my $arduino_dir         = $ENV{'ARDUINO_DIR'}   || '/usr/share/arduino';
+
+	return (
+		[ 'dir|d=s', 'specify the Arduino installation directory',
+			{ default => $arduino_dir } ],
+	);
+}
 
 sub execute {
 	my ($self, $opt, $args) = @_;
