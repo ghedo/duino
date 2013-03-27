@@ -36,6 +36,8 @@ sub execute {
 	open my $fh, '<', $boards
 		or die "Can't open file 'boards.txt'.\n";
 
+	print "Supported models:\n\n";
+
 	while (my $line = <$fh>) {
 		chomp $line;
 
@@ -48,7 +50,7 @@ sub execute {
 
 		my (undef, $value) = split '=', $line;
 
-		printf "%15s: %s\n", $board, $value;
+		printf "%10s: %s\n", $board, $value;
 	}
 
 	close $fh;

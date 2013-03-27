@@ -63,6 +63,8 @@ sub execute {
 	my $avrdude      = $self -> file($opt, 'hardware/tools/avrdude');
 	my $avrdude_conf = $self -> file($opt, 'hardware/tools/avrdude.conf');
 
+	print "Uploading to '" . $self -> config($opt, 'name') . "'...\n";
+
 	my @avrdude_opts = (
 		'-p', $mcu,
 		'-C', $avrdude_conf,
