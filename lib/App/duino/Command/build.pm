@@ -8,6 +8,7 @@ use App::duino -command;
 use Text::Template;
 use File::Basename;
 use File::Find::Rule;
+use IPC::Cmd qw(can_run run);
 use File::Path qw(make_path);
 
 =head1 NAME
@@ -55,6 +56,8 @@ sub opt_spec {
 
 sub execute {
 	my ($self, $opt, $args) = @_;
+
+	my $make = can_run('make') or die "Can't find command 'make'.";
 
 	my $board_name    = $opt -> board;
 	my $makefile_name = ".build/$board_name/Makefile";
@@ -107,6 +110,7 @@ sub execute {
 	);
 
 	system 'make', '--silent', '-f', $makefile_name;
+	die "Failed to build.\n" unless $? == 0;
 }
 
 =head1 AUTHOR
