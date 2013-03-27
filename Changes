@@ -5,6 +5,8 @@ Revision history for App-duino
 0.06      2013-03-27 13:07:54 Europe/Rome
 
  - Improve documentation (no functional changes)
+ - Improve output during build
+ - Check 'make' return value after build
 
 0.05      2013-03-26 14:29:41 Europe/Rome
 
