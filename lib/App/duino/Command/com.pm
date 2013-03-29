@@ -38,9 +38,6 @@ sub execute {
 
 	my $fd = fileno $fh;
 
-	my $term = POSIX::Termios -> new;
-	$term -> getattr($fd);
-
 	while (read $fh, my $char, 1) {
 		print $char;
 	}
