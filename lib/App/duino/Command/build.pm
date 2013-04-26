@@ -94,7 +94,7 @@ sub execute {
 		local_ino_srcs => join(' ', @ino_srcs),
 
 		libs       => $opt -> libs,
-		root       => $opt -> dir,
+		root       => $opt -> root,
 		sketchbook => $opt -> sketchbook,
 		hardware   => $opt -> hardware,
 	};
