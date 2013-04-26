@@ -34,6 +34,10 @@ duino - Command-line toolkit for working with Arduino boards
    $ duino build --board uno some_sketch.ino
    $ duino upload --board uno --port /dev/ttyACM0 some_sketch.ino
 
+=item Upload a previously built hex file:
+
+   $ duino upload --board uno some_file.hex
+
 =item Communicate with the Arduino:
 
    $ duino com --port /dev/ttyACM0

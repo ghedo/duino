@@ -56,6 +56,10 @@ sub execute {
 		if $args -> [0] and -e $args -> [0];
 
 	my $hex  = ".build/$board/$name.hex";
+
+	$hex = $args -> [0]
+		if $args -> [0] =~ /\.hex$/
+
 	my $mcu  = $self -> config($opt, 'build.mcu');
 	my $prog = $self -> config($opt, 'upload.protocol');
 	my $baud = $self -> config($opt, 'upload.speed');
