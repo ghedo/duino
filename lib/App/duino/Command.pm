@@ -73,7 +73,7 @@ sub board_config {
 
 	close $fh;
 
-	die "Can't find '$board.$config' config value.\n"
+	warn "Can't find '$board.$config' config value.\n"
 		if not $value;
 
 	return $value;
