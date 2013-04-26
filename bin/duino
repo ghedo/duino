@@ -104,6 +104,15 @@ Example:
 
     $ duino build --libs "Wire Wire/utility SPI"
 
+=item B<--hardware>, B<-r>
+
+The "type" of hardware to target. The environment variable C<ARDUINO_HARDWARE>
+will be used if present and if the command-line option is not set. If neither
+of them is set the default value (C<arduino>) will be used.
+
+This option is only useful when using MCUs not officially supported by the
+Arduino platform (e.g. L<ATTiny|https://code.google.com/p/arduino-tiny/>).
+
 =back
 
 =head1 CONFIGURATION

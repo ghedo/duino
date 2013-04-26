@@ -35,6 +35,9 @@ sub default_config {
 	return $self -> ini($config) || $ENV{'ARDUINO_BOARD'} || 'uno'
 		if $config eq 'board';
 
+	return $self -> ini($config) || $ENV{'ARDUINO_HARDWARE'} || 'arduino'
+		if $config eq 'hardware';
+
 	return $self -> ini($config) || $ENV{'ARDUINO_LIBS'}  || ''
 		if $config eq 'libs';
 
@@ -50,7 +53,8 @@ sub board_config {
 
 	my $board = $opt -> board;
 
-	my $boards = $self -> file($opt, 'hardware/arduino/boards.txt');
+	my $boards = $self -> file($opt, 'hardware/' .
+			$opt -> hardware . '/boards.txt');
 
 	open my $fh, '<', $boards
 		or die "Can't open file 'boards.txt'.\n";

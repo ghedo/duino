@@ -28,13 +28,17 @@ sub opt_spec {
 
 		[ 'root|d=s', 'specify the Arduino installation directory',
 			{ default => $self -> default_config('root') } ],
+
+		[ 'hardware|r=s', 'specify the hardware type to build for',
+			{ default => $self -> default_config('hardware') } ],
 	);
 }
 
 sub execute {
 	my ($self, $opt, $args) = @_;
 
-	my $boards = $self -> file($opt, 'hardware/arduino/boards.txt');
+	my $boards = $self -> file($opt, 'hardware/' .
+			$opt -> hardware . '/boards.txt');
 
 	open my $fh, '<', $boards
 		or die "Can't open file 'boards.txt'.\n";

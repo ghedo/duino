@@ -40,6 +40,9 @@ sub opt_spec {
 
 		[ 'libs|l=s', 'specify the Arduino libraries to build',
 			{ default => $self -> default_config('libs') } ],
+
+		[ 'hardware|r=s', 'specify the hardware type to build for',
+			{ default => $self -> default_config('hardware') } ],
 	);
 }
 
@@ -83,15 +86,17 @@ sub execute {
 		f_cpu   => $self -> board_config($opt, 'build.f_cpu'),
 		vid     => $self -> board_config($opt, 'build.vid'),
 		pid     => $self -> board_config($opt, 'build.pid'),
+		core    => $self -> board_config($opt, 'build.core'),
 
 		target         => $target,
 		local_c_srcs   => join(' ', @c_srcs),
 		local_cpp_srcs => join(' ', @cpp_srcs),
 		local_ino_srcs => join(' ', @ino_srcs),
 
-		arduino_libs       => $opt -> libs,
-		arduino_root       => $opt -> dir,
-		arduino_sketchbook => $opt -> sketchbook,
+		libs       => $opt -> libs,
+		root       => $opt -> dir,
+		sketchbook => $opt -> sketchbook,
+		hardware   => $opt -> hardware,
 	};
 
 	$template -> fill_in(
@@ -143,19 +148,18 @@ F_CPU     = {$f_cpu}
 USB_VID   = {$vid}
 USB_PID   = {$pid}
 
-ARDUINO_ROOT       = {$arduino_root}
-ARDUINO_LIBS       = {$arduino_libs}
+ARDUINO_ROOT       = {$root}
+ARDUINO_LIBS       = {$libs}
 ARDUINO_VERSION    = 100
-ARDUINO_SKETCHBOOK = {$arduino_sketchbook}
+ARDUINO_SKETCHBOOK = {$sketchbook}
 
 ARDUINO_LIB_PATH  = $(ARDUINO_ROOT)/libraries
-ARDUINO_CORE_PATH = $(ARDUINO_ROOT)/hardware/arduino/cores/arduino
-ARDUINO_VAR_PATH  = $(ARDUINO_ROOT)/hardware/arduino/variants
+ARDUINO_CORE_PATH = $(ARDUINO_ROOT)/hardware/{$hardware}/cores/{$core}
+ARDUINO_VAR_PATH  = $(ARDUINO_ROOT)/hardware/{$hardware}/variants
 
 USER_LIB_PATH = $(ARDUINO_SKETCHBOOK)/libraries
 
 AVR_TOOLS_DIR     = $(ARDUINO_ROOT)/hardware/tools/avr
-AVRDUDE_CONF      = $(AVR_TOOLS_DIR)/etc/avrdude.conf
 AVR_TOOLS_PATH    = $(AVR_TOOLS_DIR)/bin
 
 OBJDIR  = .build/$(BOARD_TAG)
