@@ -30,6 +30,9 @@ sub opt_spec {
 		[ 'board|b=s', 'specify the board model',
 			{ default => $self -> default_config('board') } ],
 
+		[ 'sketchbook|s=s', 'specify the user sketchbook directory',
+			{ default => $self -> default_config('sketchbook') } ],
+
 		[ 'root|d=s', 'specify the Arduino installation directory',
 			{ default => $self -> default_config('root') } ],
 
@@ -52,14 +55,14 @@ sub execute {
 
 	$hex = $args -> [0] if $args -> [0] =~ /\.hex$/;
 
-	my $mcu  = $self -> config($opt, 'build.mcu');
-	my $prog = $self -> config($opt, 'upload.protocol');
-	my $baud = $self -> config($opt, 'upload.speed');
+	my $mcu  = $self -> board_config($opt, 'build.mcu');
+	my $prog = $self -> board_config($opt, 'upload.protocol');
+	my $baud = $self -> board_config($opt, 'upload.speed');
 
 	my $avrdude      = $self -> file($opt, 'hardware/tools/avrdude');
 	my $avrdude_conf = $self -> file($opt, 'hardware/tools/avrdude.conf');
 
-	print "Uploading to '" . $self -> config($opt, 'name') . "'...\n";
+	print "Uploading to '" . $self -> board_config($opt, 'name') . "'...\n";
 
 	my @avrdude_opts = (
 		'-p', $mcu,
@@ -81,7 +84,7 @@ sub execute {
 	my $term = POSIX::Termios -> new;
 	$term -> getattr($fd);
 
-	if ($self -> config($opt, 'bootloader.path') eq 'caterina') {
+	if ($self -> board_config($opt, 'bootloader.path') eq 'caterina') {
 		$term -> setispeed(&POSIX::B1200);
 		$term -> setospeed(&POSIX::B1200);
 

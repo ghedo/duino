@@ -23,6 +23,9 @@ sub opt_spec {
 	my ($self) = @_;
 
 	return (
+		[ 'sketchbook|s=s', 'specify the user sketchbook directory',
+			{ default => $self -> default_config('sketchbook') } ],
+
 		[ 'root|d=s', 'specify the Arduino installation directory',
 			{ default => $self -> default_config('root') } ],
 	);

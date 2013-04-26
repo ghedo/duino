@@ -78,11 +78,11 @@ sub execute {
 
 	my $makefile_opts = {
 		board   => $board_name,
-		variant => $self -> config($opt, 'build.variant'),
-		mcu     => $self -> config($opt, 'build.mcu'),
-		f_cpu   => $self -> config($opt, 'build.f_cpu'),
-		vid     => $self -> config($opt, 'build.vid'),
-		pid     => $self -> config($opt, 'build.pid'),
+		variant => $self -> board_config($opt, 'build.variant'),
+		mcu     => $self -> board_config($opt, 'build.mcu'),
+		f_cpu   => $self -> board_config($opt, 'build.f_cpu'),
+		vid     => $self -> board_config($opt, 'build.vid'),
+		pid     => $self -> board_config($opt, 'build.pid'),
 
 		target         => $target,
 		local_c_srcs   => join(' ', @c_srcs),
@@ -90,7 +90,7 @@ sub execute {
 		local_ino_srcs => join(' ', @ino_srcs),
 
 		arduino_libs       => $opt -> libs,
-		arduino_root        => $opt -> dir,
+		arduino_root       => $opt -> dir,
 		arduino_sketchbook => $opt -> sketchbook,
 	};
 

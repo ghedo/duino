@@ -45,7 +45,7 @@ sub default_config {
 		if $config eq 'port';
 }
 
-sub config {
+sub board_config {
 	my ($self, $opt, $config) = @_;
 
 	my $board = $opt -> board;
