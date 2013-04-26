@@ -38,6 +38,9 @@ sub opt_spec {
 
 		[ 'port|p=s', 'specify the serial port to use',
 			{ default => $self -> default_config('port') } ],
+
+		[ 'hardware|r=s', 'specify the hardware type to build for',
+			{ default => $self -> default_config('hardware') } ],
 	);
 }
 
