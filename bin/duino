@@ -87,7 +87,7 @@ C<ARDUINO_SKETCHBOOK> will be used if present and if the command-line option is
 not set. If neither of them is set the default value (C<$HOME/sketchbook>) will
 be used.
 
-=item B<--dir>, B<-d>
+=item B<--root>, B<-d>
 
 The path to the Arduino installation directory. The environment variable
 C<ARDUINO_DIR> will be used if present and if the command-line option is not

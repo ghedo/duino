@@ -23,8 +23,8 @@ sub opt_spec {
 	my ($self) = @_;
 
 	return (
-		[ 'dir|d=s', 'specify the Arduino installation directory',
-			{ default => $self -> default_config('dir') } ],
+		[ 'root|d=s', 'specify the Arduino installation directory',
+			{ default => $self -> default_config('root') } ],
 	);
 }
 

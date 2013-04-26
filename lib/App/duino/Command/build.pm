@@ -35,8 +35,8 @@ sub opt_spec {
 		[ 'sketchbook|s=s', 'specify the user sketchbook directory',
 			{ default => $self -> default_config('sketchbook') } ],
 
-		[ 'dir|d=s', 'specify the Arduino installation directory',
-			{ default => $self -> default_config('dir') } ],
+		[ 'root|d=s', 'specify the Arduino installation directory',
+			{ default => $self -> default_config('root') } ],
 
 		[ 'libs|l=s', 'specify the Arduino libraries to build',
 			{ default => $self -> default_config('libs') } ],
@@ -90,7 +90,7 @@ sub execute {
 		local_ino_srcs => join(' ', @ino_srcs),
 
 		arduino_libs       => $opt -> libs,
-		arduino_dir        => $opt -> dir,
+		arduino_root        => $opt -> dir,
 		arduino_sketchbook => $opt -> sketchbook,
 	};
 
@@ -143,18 +143,18 @@ F_CPU     = {$f_cpu}
 USB_VID   = {$vid}
 USB_PID   = {$pid}
 
-ARDUINO_DIR        = {$arduino_dir}
+ARDUINO_ROOT       = {$arduino_root}
 ARDUINO_LIBS       = {$arduino_libs}
 ARDUINO_VERSION    = 100
 ARDUINO_SKETCHBOOK = {$arduino_sketchbook}
 
-ARDUINO_LIB_PATH  = $(ARDUINO_DIR)/libraries
-ARDUINO_CORE_PATH = $(ARDUINO_DIR)/hardware/arduino/cores/arduino
-ARDUINO_VAR_PATH  = $(ARDUINO_DIR)/hardware/arduino/variants
+ARDUINO_LIB_PATH  = $(ARDUINO_ROOT)/libraries
+ARDUINO_CORE_PATH = $(ARDUINO_ROOT)/hardware/arduino/cores/arduino
+ARDUINO_VAR_PATH  = $(ARDUINO_ROOT)/hardware/arduino/variants
 
 USER_LIB_PATH = $(ARDUINO_SKETCHBOOK)/libraries
 
-AVR_TOOLS_DIR     = $(ARDUINO_DIR)/hardware/tools/avr
+AVR_TOOLS_DIR     = $(ARDUINO_ROOT)/hardware/tools/avr
 AVRDUDE_CONF      = $(AVR_TOOLS_DIR)/etc/avrdude.conf
 AVR_TOOLS_PATH    = $(AVR_TOOLS_DIR)/bin
 

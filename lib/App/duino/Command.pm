@@ -29,8 +29,8 @@ sub ini {
 sub default_config {
 	my ($self, $config) = @_;
 
-	return $ENV{'ARDUINO_DIR'}   || '/usr/share/arduino'
-		if $config eq 'dir';
+	return $ENV{'ARDUINO_ROOT'}   || '/usr/share/arduino'
+		if $config eq 'root';
 
 	return $self -> ini($config) || $ENV{'ARDUINO_BOARD'} || 'uno'
 		if $config eq 'board';
@@ -79,10 +79,7 @@ sub config {
 sub file {
 	my ($self, $opt, $file) = @_;
 
-	my $path = $opt -> sketchbook . '/' . $file;
-	return $path if -e $path;
-
-	$path = $opt -> dir . '/' . $file;
+	my $path = $opt -> root . '/' . $file;
 	return $path if -e $path;
 
 	die "Can't find file '" . basename($file) . "'.\n";

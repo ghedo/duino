@@ -30,8 +30,8 @@ sub opt_spec {
 		[ 'board|b=s', 'specify the board model',
 			{ default => $self -> default_config('board') } ],
 
-		[ 'dir|d=s', 'specify the Arduino installation directory',
-			{ default => $self -> default_config('dir') } ],
+		[ 'root|d=s', 'specify the Arduino installation directory',
+			{ default => $self -> default_config('root') } ],
 
 		[ 'port|p=s', 'specify the serial port to use',
 			{ default => $self -> default_config('port') } ],
