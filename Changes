@@ -2,6 +2,12 @@ Revision history for App-duino
 
 {{$NEXT}}
 
+ - Support direct *.hex file upload
+ - Rename --dir option to --root (incompatible change)
+ - Support using different hardware types (e.g. not-officially-supported MCUs)
+ - Do not die when a board config variable is not found (this caused "duino
+   build" to fail on pretty much every Arduino except Leonardo/Micro)
+
 0.07      2013-04-20 19:04:09 Europe/Rome
 
  - Improve output
