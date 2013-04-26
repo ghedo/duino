@@ -53,7 +53,7 @@ sub execute {
 
 	my $hex  = ".build/$board/$name.hex";
 
-	$hex = $args -> [0] if $args -> [0] =~ /\.hex$/;
+	$hex = $args -> [0] if $args -> [0] and $args -> [0] =~ /\.hex$/;
 
 	my $mcu  = $self -> board_config($opt, 'build.mcu');
 	my $prog = $self -> board_config($opt, 'upload.protocol');
