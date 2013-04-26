@@ -2,6 +2,8 @@ Revision history for App-duino
 
 {{$NEXT}}
 
+0.08      2013-04-26 22:08:26 Europe/Rome
+
  - Support direct *.hex file upload
  - Rename --dir option to --root (incompatible change)
  - Support using different hardware types (e.g. not-officially-supported MCUs)
