@@ -20,11 +20,11 @@ sub abstract { 'list all known Arduino models' }
 sub usage_desc { '%c models %o' }
 
 sub opt_spec {
-	my $arduino_dir         = $ENV{'ARDUINO_DIR'}   || '/usr/share/arduino';
+	my ($self) = @_;
 
 	return (
 		[ 'dir|d=s', 'specify the Arduino installation directory',
-			{ default => $arduino_dir } ],
+			{ default => $self -> default_config('dir') } ],
 	);
 }
 

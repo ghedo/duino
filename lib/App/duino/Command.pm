@@ -14,6 +14,37 @@ App::duino::Command - Base class for App::duino commands
 
 =cut
 
+sub ini {
+	my ($self, $config) = @_;
+
+	if (-e 'duino.ini') {
+		my $config = Config::INI::Reader -> read_file('duino.ini');
+
+		return $config -> {'_'} -> {$config};
+	}
+
+	return undef;
+}
+
+sub default_config {
+	my ($self, $config) = @_;
+
+	return $ENV{'ARDUINO_DIR'}   || '/usr/share/arduino'
+		if $config eq 'dir';
+
+	return $self -> ini($config) || $ENV{'ARDUINO_BOARD'} || 'uno'
+		if $config eq 'board';
+
+	return $self -> ini($config) || $ENV{'ARDUINO_LIBS'}  || ''
+		if $config eq 'libs';
+
+	return $ENV{'ARDUINO_SKETCHBOOK'} || "$ENV{'HOME'}/sketchbook"
+		if $config eq 'sketchbook';
+
+	return $ENV{'ARDUINO_PORT'}  || '/dev/ttyACM0'
+		if $config eq 'port';
+}
+
 sub config {
 	my ($self, $opt, $config) = @_;
 
@@ -48,8 +79,10 @@ sub config {
 sub file {
 	my ($self, $opt, $file) = @_;
 
-	my $path = $opt -> dir . '/' . $file;
+	my $path = $opt -> sketchbook . '/' . $file;
+	return $path if -e $path;
 
+	$path = $opt -> dir . '/' . $file;
 	return $path if -e $path;
 
 	die "Can't find file '" . basename($file) . "'.\n";

@@ -22,18 +22,11 @@ sub abstract { 'clean the build directory' }
 sub usage_desc { '%c clean %o' }
 
 sub opt_spec {
-	my $arduino_board       = $ENV{'ARDUINO_BOARD'} || 'uno';
-
-	if (-e 'duino.ini') {
-		my $config = Config::INI::Reader -> read_file('duino.ini');
-
-		$arduino_board = $config -> {'_'} -> {'board'}
-			if $config -> {'_'} -> {'board'};
-	}
+	my ($self) = @_;
 
 	return (
 		[ 'board|b=s', 'specify the board model',
-			{ default => $arduino_board } ],
+			{ default => $self -> default_config('board') } ],
 	);
 }
 

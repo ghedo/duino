@@ -22,11 +22,11 @@ sub abstract { 'open a serial monitor to an Arduino' }
 sub usage_desc { '%c upload %o [sketch.ino]' }
 
 sub opt_spec {
-	my $arduino_port        = $ENV{'ARDUINO_PORT'}  || '/dev/ttyACM0';
+	my ($self) = @_;
 
 	return (
 		[ 'port|p=s', 'specify the serial port to use',
-			{ default => $arduino_port } ],
+			{ default => $self -> default_config('port') } ],
 	);
 }
 
