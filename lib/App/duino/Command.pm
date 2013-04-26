@@ -18,9 +18,8 @@ sub ini {
 	my ($self, $config) = @_;
 
 	if (-e 'duino.ini') {
-		my $config = Config::INI::Reader -> read_file('duino.ini');
-
-		return $config -> {'_'} -> {$config};
+		my $cfg = Config::INI::Reader -> read_file('duino.ini');
+		return $cfg -> {'_'} -> {$config};
 	}
 
 	return undef;
