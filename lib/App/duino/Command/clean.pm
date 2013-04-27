@@ -30,12 +30,20 @@ sub opt_spec {
 	);
 }
 
+sub is_folder_empty {
+	my $dir = shift;
+
+	opendir my $dh, $dir or return 0;
+	return !grep { not /^\.+$/ } readdir $dh;
+}
+
 sub execute {
 	my ($self, $opt, $args) = @_;
 
 	my $board_name = $opt -> board;
 
 	remove_tree(".build/$board_name/");
+	remove_tree(".build") if is_folder_empty(".build");
 }
 
 =head1 AUTHOR
