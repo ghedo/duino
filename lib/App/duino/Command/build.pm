@@ -79,6 +79,16 @@ sub execute {
 				-> name('*.ino') -> in('./');
 	}
 
+	my $core = $self -> board_config($opt, 'build.core');
+	my $hardware = $opt -> hardware;
+
+	my $core_path = "$hardware/cores/$core";
+
+	if ($core =~ /:/) {
+		my ($core1, $core2) = split /:/, $core;
+		$core_path = "$core1/cores/$core2";
+	}
+
 	my $makefile_opts = {
 		board   => $board_name,
 		variant => $self -> board_config($opt, 'build.variant'),
@@ -86,7 +96,7 @@ sub execute {
 		f_cpu   => $self -> board_config($opt, 'build.f_cpu'),
 		vid     => $self -> board_config($opt, 'build.vid'),
 		pid     => $self -> board_config($opt, 'build.pid'),
-		core    => $self -> board_config($opt, 'build.core'),
+		core_pth=> $core_path,
 
 		target         => $target,
 		local_c_srcs   => join(' ', @c_srcs),
@@ -96,7 +106,7 @@ sub execute {
 		libs       => $opt -> libs,
 		root       => $opt -> root,
 		sketchbook => $opt -> sketchbook,
-		hardware   => $opt -> hardware,
+		hardware   => $hardware,
 	};
 
 	$template -> fill_in(
@@ -154,7 +164,7 @@ ARDUINO_VERSION    = 100
 ARDUINO_SKETCHBOOK = {$sketchbook}
 
 ARDUINO_LIB_PATH  = $(ARDUINO_ROOT)/libraries
-ARDUINO_CORE_PATH = $(ARDUINO_ROOT)/hardware/{$hardware}/cores/{$core}
+ARDUINO_CORE_PATH = $(ARDUINO_ROOT)/hardware/{$core_pth}
 ARDUINO_VAR_PATH  = $(ARDUINO_ROOT)/hardware/{$hardware}/variants
 
 USER_LIB_PATH = $(ARDUINO_SKETCHBOOK)/libraries
