@@ -15,6 +15,11 @@ App::duino::Command::clean - Clean the build directory
 
   $ duino clean --board uno
 
+=head1 DESCRIPTION
+
+This command can be used to clean the build directory for a specific Arduino
+board.
+
 =cut
 
 sub abstract { 'clean the build directory' }
@@ -45,6 +50,18 @@ sub execute {
 	remove_tree(".build/$board_name/");
 	remove_tree(".build") if is_folder_empty(".build");
 }
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--board>, B<-b>
+
+The Arduino board model. The environment variable C<ARDUINO_BOARD> will be used
+if present and if the command-line option is not set. If neither of them is set
+the default value (C<uno>) will be used.
+
+=back
 
 =head1 AUTHOR
 

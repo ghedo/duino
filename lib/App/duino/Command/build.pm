@@ -17,7 +17,18 @@ App::duino::Command::build - Build an Arduino sketch
 
 =head1 SYNOPSIS
 
-  $ duino build --board uno
+   # this will find all *.ino, *.c and *.cpp files
+   $ duino build --board uno 
+
+   # explicitly provide the sketch file
+   $ duino build --board uno some_sketch.ino
+
+=head1 DESCRIPTION
+
+This command can be used to build a sketch for a specific Arduino board. The
+sketch file is automatically detected in the current working directory. If this
+doesn't work, the path of the sketch file can be explicitly provided on the
+command-line.
 
 =cut
 
@@ -32,14 +43,14 @@ sub opt_spec {
 		[ 'board|b=s', 'specify the board model',
 			{ default => $self -> default_config('board') } ],
 
+		[ 'libs|l=s', 'specify the Arduino libraries to build',
+			{ default => $self -> default_config('libs') } ],
+
 		[ 'sketchbook|s=s', 'specify the user sketchbook directory',
 			{ default => $self -> default_config('sketchbook') } ],
 
 		[ 'root|d=s', 'specify the Arduino installation directory',
 			{ default => $self -> default_config('root') } ],
-
-		[ 'libs|l=s', 'specify the Arduino libraries to build',
-			{ default => $self -> default_config('libs') } ],
 
 		[ 'hardware|r=s', 'specify the hardware type to build for',
 			{ default => $self -> default_config('hardware') } ],
@@ -116,6 +127,51 @@ sub execute {
 	system 'make', '--silent', '-f', $makefile_name;
 	die "Failed to build.\n" unless $? == 0;
 }
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--board>, B<-b>
+
+The Arduino board model. The environment variable C<ARDUINO_BOARD> will be used
+if present and if the command-line option is not set. If neither of them is set
+the default value (C<uno>) will be used.
+
+=item B<--libs>, B<-l>
+
+List of space-separated, non-core Arduino libraries to build. The environment
+variable C<ARDUINO_LIBS> will be used if present and if the command-line option
+is not set. If neither of them is set no libraries are built.
+
+Example:
+
+    $ duino build --libs "Wire Wire/utility SPI"
+
+=item B<--sketchbook>, B<-s>
+
+The path to the user's sketchbook directory. The environment variable
+C<ARDUINO_SKETCHBOOK> will be used if present and if the command-line option is
+not set. If neither of them is set the default value (C<$HOME/sketchbook>) will
+be used.
+
+=item B<--root>, B<-d>
+
+The path to the Arduino installation directory. The environment variable
+C<ARDUINO_DIR> will be used if present and if the command-line option is not
+set. If neither of them is set the default value (C</usr/share/arduino>) will
+be used.
+
+=item B<--hardware>, B<-r>
+
+The "type" of hardware to target. The environment variable C<ARDUINO_HARDWARE>
+will be used if present and if the command-line option is not set. If neither
+of them is set the default value (C<arduino>) will be used.
+
+This option is only useful when using MCUs not officially supported by the
+Arduino platform (e.g. L<ATTiny|https://code.google.com/p/arduino-tiny/>).
+
+=back
 
 =head1 AUTHOR
 

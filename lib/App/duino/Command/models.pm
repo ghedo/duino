@@ -13,6 +13,10 @@ App::duino::Command::models - List all known Arduino models
 
   $ duino models
 
+=head1 DESCRIPTION
+
+This command can be used to list all known Arduino models.
+
 =cut
 
 sub abstract { 'list all known Arduino models' }
@@ -62,6 +66,35 @@ sub execute {
 
 	close $fh;
 }
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--sketchbook>, B<-s>
+
+The path to the user's sketchbook directory. The environment variable
+C<ARDUINO_SKETCHBOOK> will be used if present and if the command-line option is
+not set. If neither of them is set the default value (C<$HOME/sketchbook>) will
+be used.
+
+=item B<--root>, B<-d>
+
+The path to the Arduino installation directory. The environment variable
+C<ARDUINO_DIR> will be used if present and if the command-line option is not
+set. If neither of them is set the default value (C</usr/share/arduino>) will
+be used.
+
+=item B<--hardware>, B<-r>
+
+The "type" of hardware to target. The environment variable C<ARDUINO_HARDWARE>
+will be used if present and if the command-line option is not set. If neither
+of them is set the default value (C<arduino>) will be used.
+
+This option is only useful when using MCUs not officially supported by the
+Arduino platform (e.g. L<ATTiny|https://code.google.com/p/arduino-tiny/>).
+
+=back
 
 =head1 AUTHOR
 

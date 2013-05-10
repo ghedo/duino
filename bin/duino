@@ -64,54 +64,29 @@ repositories (e.g. the C<arduino-core> package on Debian/Ubuntu).
 
 App::duino -> run;
 
-=head1 OPTIONS
+=head1 COMMANDS
 
 =over 4
 
-=item B<--board>, B<-b>
+=item L<models|App::duino::Command::models>
 
-The Arduino board model. The environment variable C<ARDUINO_BOARD> will be used
-if present and if the command-line option is not set. If neither of them is set
-the default value (C<uno>) will be used.
+List all known Arduino models.
 
-=item B<--port>, B<-p>
+=item L<build|App::duino::Command::build>
 
-The path to the Arduino serial port. The environment variable C<ARDUINO_PORT>
-will be used if present and if the command-line option is not set. If neither
-of them is set the default value (C</dev/ttyACM0>) will be used.
+Build an Arduino sketch.
 
-=item B<--sketchbook>, B<-s>
+=item L<upload|App::duino::Command::upload>
 
-The path to the user's sketchbook directory. The environment variable
-C<ARDUINO_SKETCHBOOK> will be used if present and if the command-line option is
-not set. If neither of them is set the default value (C<$HOME/sketchbook>) will
-be used.
+Upload a sketch to an Arduino.
 
-=item B<--root>, B<-d>
+=item L<clean|App::duino::Command::clean>
 
-The path to the Arduino installation directory. The environment variable
-C<ARDUINO_DIR> will be used if present and if the command-line option is not
-set. If neither of them is set the default value (C</usr/share/arduino>) will
-be used.
+Clean the build directory.
 
-=item B<--libs>, B<-l>
+=item L<com|App::duino::Command::com>
 
-List of space-separated, non-core Arduino libraries to build. The environment
-variable C<ARDUINO_LIBS> will be used if present and if the command-line option
-is not set. If neither of them is set no libraries are built.
-
-Example:
-
-    $ duino build --libs "Wire Wire/utility SPI"
-
-=item B<--hardware>, B<-r>
-
-The "type" of hardware to target. The environment variable C<ARDUINO_HARDWARE>
-will be used if present and if the command-line option is not set. If neither
-of them is set the default value (C<arduino>) will be used.
-
-This option is only useful when using MCUs not officially supported by the
-Arduino platform (e.g. L<ATTiny|https://code.google.com/p/arduino-tiny/>).
+Open a serial monitor to an Arduino
 
 =back
 

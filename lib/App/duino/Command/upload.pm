@@ -15,7 +15,11 @@ App::duino::Command::upload - Upload a sketch to an Arduino
 
 =head1 SYNOPSIS
 
-  $ duino upload --board uno --port /dev/ttyACM0
+   # this will find the *.hex file to upload in the board's build directory
+   $ duino upload --board uno --port /dev/ttyACM0
+
+   # explicitly provide the *.hex file
+   $ duino upload --board uno some_file.hex
 
 =cut
 
@@ -30,14 +34,14 @@ sub opt_spec {
 		[ 'board|b=s', 'specify the board model',
 			{ default => $self -> default_config('board') } ],
 
+		[ 'port|p=s', 'specify the serial port to use',
+			{ default => $self -> default_config('port') } ],
+
 		[ 'sketchbook|s=s', 'specify the user sketchbook directory',
 			{ default => $self -> default_config('sketchbook') } ],
 
 		[ 'root|d=s', 'specify the Arduino installation directory',
 			{ default => $self -> default_config('root') } ],
-
-		[ 'port|p=s', 'specify the serial port to use',
-			{ default => $self -> default_config('port') } ],
 
 		[ 'hardware|r=s', 'specify the hardware type to build for',
 			{ default => $self -> default_config('hardware') } ],
@@ -107,6 +111,47 @@ sub execute {
 
 	system $avrdude, @avrdude_opts;
 }
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--board>, B<-b>
+
+The Arduino board model. The environment variable C<ARDUINO_BOARD> will be used
+if present and if the command-line option is not set. If neither of them is set
+the default value (C<uno>) will be used.
+
+=item B<--port>, B<-p>
+
+The path to the Arduino serial port. The environment variable C<ARDUINO_PORT>
+will be used if present and if the command-line option is not set. If neither
+of them is set the default value (C</dev/ttyACM0>) will be used.
+
+=item B<--sketchbook>, B<-s>
+
+The path to the user's sketchbook directory. The environment variable
+C<ARDUINO_SKETCHBOOK> will be used if present and if the command-line option is
+not set. If neither of them is set the default value (C<$HOME/sketchbook>) will
+be used.
+
+=item B<--root>, B<-d>
+
+The path to the Arduino installation directory. The environment variable
+C<ARDUINO_DIR> will be used if present and if the command-line option is not
+set. If neither of them is set the default value (C</usr/share/arduino>) will
+be used.
+
+=item B<--hardware>, B<-r>
+
+The "type" of hardware to target. The environment variable C<ARDUINO_HARDWARE>
+will be used if present and if the command-line option is not set. If neither
+of them is set the default value (C<arduino>) will be used.
+
+This option is only useful when using MCUs not officially supported by the
+Arduino platform (e.g. L<ATTiny|https://code.google.com/p/arduino-tiny/>).
+
+=back
 
 =head1 AUTHOR
 
