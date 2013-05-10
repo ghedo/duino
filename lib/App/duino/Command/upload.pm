@@ -40,6 +40,9 @@ sub opt_spec {
 		[ 'fuses|f', 'write the fuses bits when uploading',
 			{ default => $self -> default_config('fuses') } ],
 
+		[ 'uploader|u=s', 'specify the uploader to use',
+			{ default => $self -> default_config('uploader') } ],
+
 		[ 'sketchbook|s=s', 'specify the user sketchbook directory',
 			{ default => $self -> default_config('sketchbook') } ],
 
@@ -66,7 +69,9 @@ sub execute {
 	$hex = $args -> [0] if $args -> [0] and $args -> [0] =~ /\.hex$/;
 
 	my $mcu  = $self -> board_config($opt, 'build.mcu');
-	my $prog = $self -> board_config($opt, 'upload.protocol');
+	my $prog = $opt -> uploader                               ||
+		   $self -> board_config($opt, 'upload.protocol') ||
+		   $self -> board_config($opt, 'upload.using');
 	my $baud = $self -> board_config($opt, 'upload.speed');
 
 	my $avrdude      = $self -> file($opt, 'hardware/tools/avrdude');
@@ -147,6 +152,13 @@ of them is set the default value (C</dev/ttyACM0>) will be used.
 Whether to write the fuses bits when uploading. The environment variable
 C<ARDUINO_FUSES> will be used if present and if the command-line option is not
 set. If neither of them is set the default value (C<false>) will be used.
+
+=item B<--uploader>, B<-u>
+
+The uploader to use to upload. The environment variable C<ARDUINO_UPLOADER>
+will be used if present and if the command-line option is not set. If neither
+of them is set the default value specified in the C<boards.txt> file will be
+used.
 
 =item B<--sketchbook>, B<-s>
 

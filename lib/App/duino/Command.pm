@@ -37,6 +37,9 @@ sub default_config {
 	return $ENV{'ARDUINO_FUSES'}  || 0
 		if $config eq 'fuses';
 
+	return $ENV{'ARDUINO_UPLOADER'}  || undef
+		if $config eq 'uploader';
+
 	return $self -> ini($config) || $ENV{'ARDUINO_LIBS'}  || ''
 		if $config eq 'libs';
 
