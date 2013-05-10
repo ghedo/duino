@@ -37,6 +37,9 @@ sub opt_spec {
 		[ 'port|p=s', 'specify the serial port to use',
 			{ default => $self -> default_config('port') } ],
 
+		[ 'fuses|f', 'write the fuses bits when uploading',
+			{ default => $self -> default_config('fuses') } ],
+
 		[ 'sketchbook|s=s', 'specify the user sketchbook directory',
 			{ default => $self -> default_config('sketchbook') } ],
 
@@ -71,14 +74,25 @@ sub execute {
 
 	print "Uploading to '" . $self -> board_config($opt, 'name') . "'...\n";
 
-	my @avrdude_opts = (
-		'-p', $mcu,
-		'-C', $avrdude_conf,
-		'-c', $prog,
-		'-b', $baud,
-		'-P', $port,
-		'-U', "flash:w:$hex:i"
-	);
+	my @avrdude_opts;
+	push @avrdude_opts, '-C', $avrdude_conf;
+	push @avrdude_opts, '-p', $mcu;
+
+	push @avrdude_opts, '-c', $prog;
+	push @avrdude_opts, '-b', $baud if $baud;
+	push @avrdude_opts, '-P', $port;
+
+	if ($opt -> fuses) {
+		my $efuse = $self -> board_config($opt, 'bootloader.extended_fuses');
+		my $hfuse = $self -> board_config($opt, 'bootloader.high_fuses');
+		my $lfuse = $self -> board_config($opt, 'bootloader.low_fuses');
+
+		push @avrdude_opts, '-U', "efuse:w:$efuse:m" if $efuse;
+		push @avrdude_opts, '-U', "hfuse:w:$hfuse:m" if $hfuse;
+		push @avrdude_opts, '-U', "lfuse:w:$lfuse:m" if $lfuse;
+	}
+
+	push @avrdude_opts, '-U', "flash:w:$hex:i";
 
 	die "Can't find file '$hex', did you run 'duino build'?\n"
 		unless -e $hex;
@@ -127,6 +141,12 @@ the default value (C<uno>) will be used.
 The path to the Arduino serial port. The environment variable C<ARDUINO_PORT>
 will be used if present and if the command-line option is not set. If neither
 of them is set the default value (C</dev/ttyACM0>) will be used.
+
+=item B<--fuses>, B<-f>
+
+Whether to write the fuses bits when uploading. The environment variable
+C<ARDUINO_FUSES> will be used if present and if the command-line option is not
+set. If neither of them is set the default value (C<false>) will be used.
 
 =item B<--sketchbook>, B<-s>
 
