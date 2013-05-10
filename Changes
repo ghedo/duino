@@ -3,6 +3,9 @@ Revision history for App-duino
 {{$NEXT}}
 
  - Also remove .build if empty on "duino clean"
+ - General documentation improvements
+ - Add --fuses option to the upload command
+ - Add --uploader option to the upload command
 
 0.08      2013-04-26 22:08:26 Europe/Rome
 
