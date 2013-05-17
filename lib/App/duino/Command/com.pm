@@ -6,6 +6,7 @@ use warnings;
 use App::duino -command;
 
 use Device::SerialPort;
+use IPC::Cmd qw(can_run);
 
 =head1 NAME
 
@@ -18,10 +19,9 @@ App::duino::Command::com - Open a serial monitor to an Arduino
 =head1 DESCRIPTION
 
 This command can be used to initiate a serial monitor with an Arduino board (or
-any other device that supports serial communication).
-
-Note that only RX communication is currently possible (i.e. it's only possible
-to receive data, and not send any).
+any other device that supports serial communication). The C<picocom> terminal
+emulator will be used if installed, otherwise a built-in RX-only terminal will
+be started.
 
 =cut
 
@@ -41,16 +41,20 @@ sub opt_spec {
 sub execute {
 	my ($self, $opt, $args) = @_;
 
-	open my $fh, '<', $opt -> port
-		or die "Can't open serial port '" . $opt -> port . "'.\n";
+	if (can_run('picocom')) {
+		system 'picocom', $opt -> port;
+	} else {
+		open my $fh, '<', $opt -> port
+			or die "Can't open serial port '".$opt -> port."'.\n";
 
-	my $fd = fileno $fh;
+		my $fd = fileno $fh;
 
-	while (read $fh, my $char, 1) {
-		print $char;
+		while (read $fh, my $char, 1) {
+			print $char;
+		}
+
+		close $fh;
 	}
-
-	close $fh;
 }
 
 =head1 OPTIONS
