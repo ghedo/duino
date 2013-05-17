@@ -2,6 +2,8 @@ Revision history for App-duino
 
 {{$NEXT}}
 
+0.10      2013-05-17 18:28:30 Europe/Rome
+
  - Use picocom, instead of the built-in terminal, if installed
 
 0.09      2013-05-10 16:57:29 Europe/Rome
