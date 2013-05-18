@@ -102,31 +102,37 @@ sub execute {
 	die "Can't find file '$hex', did you run 'duino build'?\n"
 		unless -e $hex;
 
-	open my $fh, '<', $opt -> port
-		or die "Can't open serial port '" . $opt -> port . "'.\n";
+	if ($self -> board_config($opt, 'bootloader.path')) {
+		open my $fh, '<', $opt -> port
+			or die "Can't open serial port '" .
+					$opt -> port . "'.\n";
 
-	my $fd = fileno $fh;
+		my $fd = fileno $fh;
 
-	my $term = POSIX::Termios -> new;
-	$term -> getattr($fd);
+		my $term = POSIX::Termios -> new;
+		$term -> getattr($fd);
 
-	if ($self -> board_config($opt, 'bootloader.path') eq 'caterina') {
-		$term -> setispeed(&POSIX::B1200);
-		$term -> setospeed(&POSIX::B1200);
+		if ($self -> board_config($opt, 'bootloader.path')
+							eq 'caterina') {
+			$term -> setispeed(&POSIX::B1200);
+			$term -> setospeed(&POSIX::B1200);
 
-		$term -> setattr($fd, &POSIX::TCSANOW);
-	} elsif ($self -> board_config($opt, 'bootloader.path') eq 'atmega') {
-		require Device::SerialPort;
+			$term -> setattr($fd, &POSIX::TCSANOW);
+		} elsif ($self -> board_config($opt, 'bootloader.path')
+								eq 'atmega') {
+			require Device::SerialPort;
 
-		my $serial = Device::SerialPort -> new($opt -> port)
-			or die "Can't open serial port '" . $opt -> port . "'.\n";
+			my $serial = Device::SerialPort -> new($opt -> port)
+				or die "Can't open serial port '" .
+						$opt -> port . "'.\n";
 
-		$serial -> pulse_dtr_on(0.1 * 1000.0);
+			$serial -> pulse_dtr_on(0.1 * 1000.0);
+		}
+
+		close $fh;
+
+		sleep 1;
 	}
-
-	close $fh;
-
-	sleep 1;
 
 	system $avrdude, @avrdude_opts;
 }
