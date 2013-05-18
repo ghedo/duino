@@ -115,7 +115,7 @@ sub execute {
 		$term -> setospeed(&POSIX::B1200);
 
 		$term -> setattr($fd, &POSIX::TCSANOW);
-	} else {
+	} elsif ($self -> board_config($opt, 'bootloader.path') eq 'atmega') {
 		require Device::SerialPort;
 
 		my $serial = Device::SerialPort -> new($opt -> port)
