@@ -74,9 +74,10 @@ sub execute {
 		TYPE => 'FILEHANDLE', SOURCE => \*DATA
 	);
 
-	my ($target, @c_srcs, @cpp_srcs, @ino_srcs);
+	my ($target, @c_srcs, @s_srcs, @cpp_srcs, @ino_srcs);
 
 	@c_srcs   = File::Find::Rule -> file -> name('*.c') -> in('./');
+	@s_srcs   = File::Find::Rule -> file -> name('*.S') -> in('./');
 	@cpp_srcs = File::Find::Rule -> file -> name('*.cpp') -> in('./');
 
 	if ($args -> [0] and -e $args -> [0]) {
@@ -111,6 +112,7 @@ sub execute {
 
 		target         => $target,
 		local_c_srcs   => join(' ', @c_srcs),
+		local_s_srcs   => join(' ', @s_srcs),
 		local_cpp_srcs => join(' ', @cpp_srcs),
 		local_ino_srcs => join(' ', @ino_srcs),
 
@@ -231,11 +233,12 @@ AVR_TOOLS_PATH    = $(AVR_TOOLS_DIR)/bin
 OBJDIR  = .build/$(BOARD_TAG)
 
 LOCAL_C_SRCS    = {$local_c_srcs}
+LOCAL_S_SRCS    = {$local_s_srcs}
 LOCAL_CPP_SRCS  = {$local_cpp_srcs}
 LOCAL_INO_SRCS  = {$local_ino_srcs}
 
-LOCAL_OBJ_FILES = $(LOCAL_C_SRCS:.c=.o) $(LOCAL_CPP_SRCS:.cpp=.o) \
-		  $(LOCAL_INO_SRCS:.ino=.o)
+LOCAL_OBJ_FILES = $(LOCAL_C_SRCS:.c=.o) $(LOCAL_C_SRCS:.c=.o) \
+		  $(LOCAL_CPP_SRCS:.cpp=.o) $(LOCAL_INO_SRCS:.ino=.o)
 LOCAL_OBJS      = $(addprefix $(OBJDIR)/, $(LOCAL_OBJ_FILES))
 
 # core sources
@@ -279,15 +282,19 @@ SYS_INCLUDES  = $(patsubst %,-I%,$(SYS_LIBS))
 USER_INCLUDES = $(patsubst %,-I%,$(USER_LIBS))
 
 LIB_C_SRCS    = $(wildcard $(patsubst %,%/*.c,$(SYS_LIBS)))
+LIB_S_SRCS    = $(wildcard $(patsubst %,%/*.S,$(SYS_LIBS)))
 LIB_CPP_SRCS  = $(wildcard $(patsubst %,%/*.cpp,$(SYS_LIBS)))
 
-USER_LIB_CPP_SRCS = $(wildcard $(patsubst %,%/*.cpp,$(USER_LIBS)))
 USER_LIB_C_SRCS   = $(wildcard $(patsubst %,%/*.c,$(USER_LIBS)))
+USER_LIB_S_SRCS   = $(wildcard $(patsubst %,%/*.S,$(USER_LIBS)))
+USER_LIB_CPP_SRCS = $(wildcard $(patsubst %,%/*.cpp,$(USER_LIBS)))
 
 LIB_OBJS      = $(patsubst $(ARDUINO_LIB_PATH)/%.c,$(OBJDIR)/%.o,$(LIB_C_SRCS))\
+		$(patsubst $(ARDUINO_LIB_PATH)/%.S,$(OBJDIR)/%.o,$(LIB_S_SRCS))\
 		$(patsubst $(ARDUINO_LIB_PATH)/%.cpp,$(OBJDIR)/%.o,$(LIB_CPP_SRCS))
-USER_LIB_OBJS = $(patsubst $(USER_LIB_PATH)/%.cpp,$(OBJDIR)/%.o,$(USER_LIB_CPP_SRCS)) \
-		$(patsubst $(USER_LIB_PATH)/%.c,$(OBJDIR)/%.o,$(USER_LIB_C_SRCS))
+USER_LIB_OBJS = $(patsubst $(USER_LIB_PATH)/%.c,$(OBJDIR)/%.o,$(USER_LIB_C_SRCS))\
+		$(patsubst $(USER_LIB_PATH)/%.S,$(OBJDIR)/%.o,$(USER_LIB_S_SRCS))\
+		$(patsubst $(USER_LIB_PATH)/%.cpp,$(OBJDIR)/%.o,$(USER_LIB_CPP_SRCS))
 
 CPPFLAGS      = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -DARDUINO=$(ARDUINO_VERSION) \
 			-I. -I$(ARDUINO_CORE_PATH) -I$(ARDUINO_VAR_PATH)/$(VARIANT) \
@@ -306,17 +313,27 @@ $(OBJDIR)/%.o: $(ARDUINO_LIB_PATH)/%.c
 	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
+$(OBJDIR)/%.o: $(ARDUINO_LIB_PATH)/%.S
+	$(ECHO) 'Building $(notdir $<)'
+	$(MKDIR) $(dir $@)
+	$(CC) -c $(CPPFLAGS) $(ASFLAGS) $< -o $@
+
 $(OBJDIR)/%.o: $(ARDUINO_LIB_PATH)/%.cpp
 	$(ECHO) 'Building $(notdir $<)'
 	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
-$(OBJDIR)/%.o: $(USER_LIB_PATH)/%.cpp
+$(OBJDIR)/%.o: $(USER_LIB_PATH)/%.c
 	$(ECHO) 'Building $(notdir $<)'
 	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
-$(OBJDIR)/%.o: $(USER_LIB_PATH)/%.c
+$(OBJDIR)/%.o: $(USER_LIB_PATH)/%.S
+	$(ECHO) 'Building $(notdir $<)'
+	$(MKDIR) $(dir $@)
+	$(CC) -c $(CPPFLAGS) $(ASFLAGS) $< -o $@
+
+$(OBJDIR)/%.o: $(USER_LIB_PATH)/%.cpp
 	$(ECHO) 'Building $(notdir $<)'
 	$(MKDIR) $(dir $@)
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
@@ -327,6 +344,10 @@ $(OBJDIR)/%.o: $(USER_LIB_PATH)/%.c
 $(OBJDIR)/%.o: %.c
 	$(ECHO) 'Building $(notdir $<)'
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
+
+$(OBJDIR)/%.o: %.S
+	$(ECHO) 'Building $(notdir $<)'
+	$(CC) -c $(CPPFLAGS) $(ASFLAGS) $< -o $@
 
 $(OBJDIR)/%.o: %.cpp
 	$(ECHO) 'Building $(notdir $<)'
